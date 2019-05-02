@@ -7,8 +7,8 @@ if [ "$inRepo" ]
 then
     for VAR in $(git remote)
     do
-        # Push master to remote
-        git push $VAR -u master
+        # Push named branch if argument provided or current if none
+        git push $VAR -u $1
     done
 else
     echo "Not in git repo"

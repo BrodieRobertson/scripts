@@ -1,0 +1,16 @@
+#!/bin/bash
+
+inRepo="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
+
+# Iterate through all remotes
+if [ "$inRepo" ] 
+then
+    for VAR in $(git remote)
+    do
+        # Push master to remote
+        git push $VAR -u master
+    done
+else
+    echo "Not in git repo"
+fi
+

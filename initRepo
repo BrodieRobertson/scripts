@@ -1,0 +1,13 @@
+#!/bin/bash
+
+PROJECT=$1
+
+if [ -z "$PROJECT" ] 
+then
+    echo "No Folder Name"
+else
+    mkdir $PROJECT
+    cd $PROJECT
+    touch .gitignore
+    git init    
+fi

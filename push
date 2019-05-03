@@ -7,7 +7,7 @@ branch=$1
 if [ "$inRepo" ] 
 then
     # Check for a branch
-    if [ -z "$branch"] 
+    if [ -z "$branch" ] 
     then
         echo "No branch specified"
         exit 1

@@ -1,0 +1,3 @@
+#!/bin/bash
+cd ~/Documents/Uni/"3rd Year"
+explorer .

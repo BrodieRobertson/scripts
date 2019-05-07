@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PROJECT=$1
+REMOTE=$2
 
 if [ -z "$PROJECT" ] 
 then
@@ -9,5 +10,10 @@ else
     mkdir $PROJECT
     cd $PROJECT
     touch .gitignore
-    git init    
+    git init
+
+    if [ ! -z "$REMOTE" ]
+    then
+        git remote add origin $REMOTE
+    fi
 fi

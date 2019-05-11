@@ -9,11 +9,12 @@ help() {
 open_mpv() {
     file=$1
 
-    if [ -z "$1" ]
+    if [ -z "$file" ]
     then
         /c/"Program Files"/mpv/mpv.exe --fs *[.mp4\|.mpv\|.mkv]
     else
-        /c/"Program Files"/mpv/mpv.exe --fs *[.mp4\|.mpv\|.mkv]
+        echo "$file"
+        #/c/"Program Files"/mpv/mpv.exe --fs *[.mp4\|.mpv\|.mkv]
     fi
 }
 
@@ -30,6 +31,32 @@ enter_path() {
     done
 }
 
+load_anime() {
+    name=$1
+
+    # No name entered
+    if [ -z "$name" ]
+    then
+        # List all videos in current directory
+        ls *[.mp4\|.mpv\|.mkv]
+
+        # Prompt user for file name
+        while true; do
+            read -p "Enter a full or partial file name to load: " answer
+            if [ -z "$answer" ]
+            then
+                echo "No file name entered" 
+            else
+                open_mpv $answer 
+                break
+            fi
+        done
+    # Load named file
+    else
+        open_mpv $name
+    fi
+}
+
 # Open help
 if [ -z "$parameter" ]
 then
@@ -43,15 +70,8 @@ then
 elif [ "$parameter" = "-n" ]
 then
     cd ~/Videos/Anime
+    load_anime $2
     
-    # No name enetered
-    if [ -z "$2" ]
-    then
-        ls *[.mp4\|.mpv\|.mkv] 
-    # Load named file
-    else
-        open_mpv $2
-    fi
 # Load all videos in a specified folder
 elif [ "$parameter" = "-p" ]
 then

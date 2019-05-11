@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# I was way over thinking this and wasted so much time becasue of it
+cd ~/Videos/Anime
+/c/"Program Files"/mpv/mpv.exe --fs *.mkv

@@ -1,26 +1,72 @@
 #!/bin/sh -
 
+parameter=$1
+
 help() {
-    echo "wa without any parameters will load all anime in the main folder \nUse -n to pattern match a name"
+    echo -e "wa without any parameters will load all anime in the main folder \nUse -n to pattern match a name"
 }
 
 open_mpv() {
-    cd ~/Videos/Anime
-    /c/"Program Files"/mpv/mpv.exe --fs *$1*[.mp4\|.mpv\|.mkv]
+    file=$1
+
+    if [ -z "$1" ]
+    then
+        /c/"Program Files"/mpv/mpv.exe --fs *[.mp4\|.mpv\|.mkv]
+    else
+        /c/"Program Files"/mpv/mpv.exe --fs *[.mp4\|.mpv\|.mkv]
+    fi
+}
+
+enter_path() {
+    while true; do
+        read -p "Enter the path you would like to search for videos in: " answer
+        if [ -z "$answer" ] 
+        then
+            echo "No path entered"
+        else 
+            cd "$answer" 
+            break
+        fi
+    done
 }
 
 # Open help
-if [ "$1" = "-h" ]
+if [ -z "$parameter" ]
 then
-   help 
-# No parameter then open all mainfolder anime 
-elif [ -z "$1" ]
-then
+    cd ~/Videos/Anime
     open_mpv
-# Only open anime with pattern matched name
-elif [ "$1" = "-n" ]
+# No parameter then open all mainfolder anime 
+elif [ "$parameter" = "-h" ]
 then
-    open_mpv $2
+    help 
+# Only open anime with pattern matched name
+elif [ "$parameter" = "-n" ]
+then
+    cd ~/Videos/Anime
+    
+    # No name enetered
+    if [ -z "$2" ]
+    then
+        ls *[.mp4\|.mpv\|.mkv] 
+    # Load named file
+    else
+        open_mpv $2
+    fi
+# Load all videos in a specified folder
+elif [ "$parameter" = "-p" ]
+then
+    # No path entered
+    if [ -z "$3" ]
+    then
+        enter_path 
+    # cd into the entered path
+    else
+        cd $3
+    fi
+elif [ "$parameter" = "-pn" ]
+then
+    # Propmpt user for path to go to 
+    enter_path    
 else 
     echo "Unsupported command, type wa -h for help"
 fi

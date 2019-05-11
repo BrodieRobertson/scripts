@@ -12,16 +12,16 @@ fi
 
 # Case statement over my supported folders
 case $destination in
-    "anime") 
+    "ani") 
         cd ~/Videos/Anime
         ;;
     "uni") 
         cd ~/Documents/Uni/"3rd Year"
         ;;
-    "txtb")
+    "tb")
         cd ~/Documents/Textbooks/"3rd Year"
         ;;
-    "script")
+    "sh")
         cd ~/scripts
         ;;
     "desk")

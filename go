@@ -29,7 +29,7 @@ route() {
     # Don't know if that's a good idea but it works
     if [ "$failure" = false ] 
     then
-        if [ ! "$2" = "-t" ] 
+        if [ ! "$1" = "-t" ] 
         then
             explorer .
         fi

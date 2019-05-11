@@ -1,55 +1,48 @@
-#!/bin/bash
+#!/bin/sh -
 
-destination=$1
-onlyInShell=$2
+onlyInTerminal=$2
 failure=false
 
-# Check if a parameter was entered
-if [ -z "$destination" ] 
-then
-    echo "No destination entered"
-fi
+help() {
+    echo "Add -t after the parameter to only open the route in the terminal"
+    echo -e "Supported destinations parameters\n - ani = ~/Videos/Anime \n - desk = ~/desktop \n - doc = ~/documents \n - h = ~ \n - pic = ~/pictures \n - sh = ~/scripts \n - tb = ~/Documents/Textbooks/3rd Year \n - uni = ~/Documents/Uni/3rd Year"
+}
 
-# Case statement over my supported folders
-case $destination in
-    "ani") 
-        cd ~/Videos/Anime
-        ;;
-    "uni") 
-        cd ~/Documents/Uni/"3rd Year"
-        ;;
-    "tb")
-        cd ~/Documents/Textbooks/"3rd Year"
-        ;;
-    "sh")
-        cd ~/scripts
-        ;;
-    "desk")
-        cd ~/desktop
-        ;;
-    "doc")
-        cd ~/documents
-        ;;
-    # ~ is a really awkward key to press
-    "h")
-        cd ~
-        ;;
-    "pic")
-        cd ~/pictures
-        ;;
-    *) 
-        echo "Unsupported destination"
-        failure=true
-        ;;
-esac
+route() {
+    # Case statement over my supported folders
+    case $1 in
+        "ani") cd ~/Videos/Anime ;;
+        "desk") cd ~/desktop ;;
+        "doc") cd ~/documents ;;
+        "h") cd ~ ;;
+        "pic") cd ~/pictures ;;
+        "sh") cd ~/scripts ;;
+        "tb") cd ~/Documents/Textbooks/"3rd Year" ;;
+        "uni") cd ~/Documents/Uni/"3rd Year" ;;
+        *) 
+            echo "Unsupported destination"
+            failure=true ;;
+    esac
 
-# Check for failure
-# Can't simply exit the script as I sometimes run it in the main shell
-# Don't know if that's a good idea but it works
-if [ "$failure" = false ] 
-then
-    if [ ! "$2" = "s" ] 
+    # Check for failure
+    # Can't simply exit the script as I sometimes run it in the main shell
+    # Don't know if that's a good idea but it works
+    if [ "$failure" = false ] 
     then
-        explorer .
+        if [ ! "$2" = "-t" ] 
+        then
+            explorer .
+        fi
     fi
+}
+
+# Check if a parameter was entered
+if [ -z "$1" ] 
+then
+    echo "Type go -h for help"
+elif [ "$1" = "-h" ] 
+then
+    help
+else
+    route $1
 fi

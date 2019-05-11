@@ -29,7 +29,7 @@ route() {
     # Don't know if that's a good idea but it works
     if [ "$failure" = false ] 
     then
-        if [ ! "$1" = "-t" ] 
+        if [ ! "$2" = "-t" ] 
         then
             explorer .
         fi
@@ -44,5 +44,5 @@ elif [ "$1" = "-h" ]
 then
     help
 else
-    route $1
+    route $1 $2
 fi

@@ -3,8 +3,7 @@
 PROJECT=$1
 REMOTE=$2
 
-if [ -z "$PROJECT" ] 
-then
+if [ -z "$PROJECT" ]; then
     echo "No Folder Name"
 else
     mkdir $PROJECT
@@ -12,8 +11,7 @@ else
     touch .gitignore
     git init
 
-    if [ ! -z "$REMOTE" ]
-    then
+    if [ ! -z "$REMOTE" ]; then
         git remote add origin $REMOTE
     fi
 fi

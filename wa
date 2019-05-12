@@ -1,9 +1,10 @@
 #!/bin/sh -
 
 parameter=$1
+default_folder="~/Videos/Anime"
 
 help() {
-    echo -e "wa without any parameters will load all anime in the main folder \nUse -n to pattern match a name"
+    echo -e "wa with any extra parameters will load all the videos in the default folder\nUse -n to load a single video in default folder\nUse -p to load all videos in a specified path\nUse -pn to load a single video in specified folder"
 }
 
 open_mpv() {
@@ -27,9 +28,8 @@ enter_path() {
         if [ -z "$answer" ] 
         then
             echo "No path entered"
-        else 
-            path="$(eval echo $answer)"
-            cd "$path" 
+        else  
+            cd "$(eval echo $answer)" 
             break
         fi
     done
@@ -64,7 +64,7 @@ load_anime() {
 # Open help
 if [ -z "$parameter" ]
 then
-    cd ~/Videos/Anime
+    cd "$(eval echo $default_folder)" 
     open_mpv
 # No parameter then open all mainfolder anime 
 elif [ "$parameter" = "-h" ]
@@ -73,7 +73,7 @@ then
 # Only open anime with pattern matched name
 elif [ "$parameter" = "-n" ]
 then
-    cd ~/Videos/Anime
+    cd "$(eval echo $default_folder)" 
     load_anime $2
     
 # Load all videos in a specified folder

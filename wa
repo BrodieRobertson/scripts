@@ -28,7 +28,8 @@ enter_path() {
         then
             echo "No path entered"
         else 
-            cd $answer 
+            path="$(eval echo $answer)"
+            cd "$path" 
             break
         fi
     done
@@ -94,7 +95,7 @@ then
     # Process path name
     if [ -z "$2" ]
     then 
-        enter_path
+        enter_path 
     else 
         cd "$2"
     fi

@@ -82,6 +82,7 @@ then
     if [ -z "$2" ]
     then
         enter_path 
+        open_mpv
     # cd into the entered path
     else
         cd $2
@@ -90,8 +91,21 @@ then
 # Load a pattern matched named video in a folder
 elif [ "$parameter" = "-pn" ]
 then
-    # Propmpt user for path to go to 
-    enter_path    
+    # Process path name
+    if [ -z "$2" ]
+    then 
+        enter_path
+    else 
+        cd "$2"
+    fi
+
+    # Process file name
+    if [ -z "$3" ]
+    then 
+        load_anime
+    else
+        open_mpv $3
+    fi
 else 
     echo "Unsupported command, type wa -h for help"
 fi

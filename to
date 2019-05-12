@@ -1,0 +1,14 @@
+#!/bin/sh -
+
+inputFile=$1
+outputFile=$2
+
+if [ -z "$inputFile" ]; then
+    echo "No input file"
+    exit 1
+elif [ -z "$outputFile" ]; then
+    echo "No output file"
+    exit 1
+else 
+    /c/ProgramData/chocolatey/bin/pandoc.exe "$inputFile" -s -o "$outputFile" 
+fi

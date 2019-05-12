@@ -44,5 +44,5 @@ elif [ "$1" = "-h" ]
 then
     help
 else
-    route $1
+    route $1 $2
 fi

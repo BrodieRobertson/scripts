@@ -1,4 +1,0 @@
-#!/bin/sh
-sed "s/^/alias /; s/,/='/; s/'*$/'/" ~/.autoalias > .tempalias 
-sed -i '/# <!>/,/# <!->/{//!d;}; /# <!>/r .tempalias' ~/.bash_profile
-rm .tempalias

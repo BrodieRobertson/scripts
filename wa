@@ -12,11 +12,11 @@ open_mpv() {
 
     # Open all videos in folder
     if [ -z "$file" ]; then
-        /c/"Program Files"/mpv/mpv.exe --fs *[.mp4\|.mpv\|.mkv]
+        /c/"Program Files"/mpv/mpv.exe --fs-screen=1 --fs *[.mp4\|.mpv\|.mkv]
     # Open similar named videos in folder
     else
         echo "$file"
-        /c/"Program Files"/mpv/mpv.exe --fs *$file*[.mp4\|.mpv\|.mkv]
+        /c/"Program Files"/mpv/mpv.exe --fs-screen=1 --fs *$file*[.mp4\|.mpv\|.mkv]
     fi
 }
 
@@ -67,8 +67,7 @@ elif [ "$parameter" = "-h" ]; then
 # Only open anime with pattern matched name
 elif [ "$parameter" = "-n" ]; then
     cd "$(eval echo $default_folder)" 
-    load_anime $2
-    
+    load_anime $2 
 # Load all videos in a specified folder
 elif [ "$parameter" = "-p" ]; then
     # No path entered

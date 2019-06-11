@@ -23,10 +23,12 @@ Used so I can easily load videos into mpv, it might take a bit of tweaking if yo
 ## Programs Used
 
 + mpv
-+ pandoc
 + git
 
 ## Script Dependencies
++ irepo
+    + git
+
 + push
   + git
   

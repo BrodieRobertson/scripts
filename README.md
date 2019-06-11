@@ -28,7 +28,7 @@ Used so I can easily load videos into mpv, it might take a bit of tweaking if yo
 
 ## Script Dependencies
 + push
-  git
+  + git
   
 + wa
   + mpv

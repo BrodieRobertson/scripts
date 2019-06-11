@@ -1,0 +1,9 @@
+#!/bin/sh -
+
+if [ -z "$1" ]; then
+    echo "No document name entered"
+    exit
+else
+    echo -e "---\ntitle: title\nauthor: "Brodie Robertson"\ngeometry:\n- top=30mm\n- left=20mm\n- right=20mm\n- bottom=30mm\nheader-includes: | \n\t\\\usepackage{float}\n\t\\\let\\\origfigure\\\figure\n\t\\\let\\\endorigfigure\\\endfigure\n\t\\\renewenvironment{figure}[1][2] {\n\t\t\\\expandafter\\\origfigure\\\expandafter[H]\n\t} {\n\t\t\\\endorigfigure\n\t}\n---" > $1
+    vim $1
+fi

@@ -1,36 +1,42 @@
-## Script Descriptions
+# Script Descriptions
 
-### gencd
+## bm
 
-Generates all of my cd alias for my .bashrc
+Browser independant bookmark manager
 
-### irepo
+### Dependencies
 
-Initializes a git repo with the option of setting a remote
++ dmenu
 
-### push
+## dm
 
-Iterates through all of the remotes for the git repo in the current and pushes changes to them
+Toggle my external display and correct for TV overscan
 
-### report
+### Dependencies
 
-Generates a pandoc markdown file with the settings I use for creating pdf documents
++ xrandr
 
-### wa
+## prompt
 
-Used so I can easily load videos into mpv, it might take a bit of tweaking if you want to use it yourself
+Simple confirmation prompt using dmenu
 
-## Programs Used
+### Dependencies
 
-+ mpv
-+ git
++ dmenu
 
-## Script Dependencies
-+ irepo
-    + git
+## transadd
 
-+ push
-  + git
-  
-+ wa
-  + mpv
+Mime map script for adding magnet links to transmission
+
+### Dependencies
+
++ transmission-daemon
++ transmission-remote
+
+## transclr
+
+Clears out all completed torrents from transmission
+
+### Dependencies
+
++ transmission-remote

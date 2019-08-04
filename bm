@@ -3,21 +3,6 @@
 # the selected value in dmenu is used to load up a new window/tab in the selected
 # browser
 
-handle_default() {
-    if [ ! -z "$1" ]; then
-        "$1" "$url"
-    elif [ ! -z "$BROWSER" ]; then
-        "$BROWSER" "$url"
-    fi
-}
-
 url=$(sort ~/bookmarks | sed 's/:.*//' | dmenu -i -p "Select a Bookmark" | xargs -I % grep "%:" ~/bookmarks | sed 's/.*://')
 
-if [ $url ]; then
-    # Special handling for browsers that support tabbing
-    case "$1" in
-        "firefox") firefox --new-tab "$url" ;;
-        *) handle_default ;;
-    esac
-fi
-
+opnbrow "$1" "$url"

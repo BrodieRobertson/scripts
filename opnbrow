@@ -1,0 +1,16 @@
+#!/bin/sh
+handle_default() {
+    if [ ! -z "$1" ]; then
+        "$1" "$2"
+    elif [ ! -z "$BROWSER" ]; then
+        $BROWSER "$2"
+    fi
+}
+
+if [ "$2" ]; then
+    # Special handling for browsers that support tabbing
+    case "$1" in
+        "firefox") firefox --new-tab "$2" ;;
+        *) handle_default ;;
+    esac
+fi

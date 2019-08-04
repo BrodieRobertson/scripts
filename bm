@@ -11,7 +11,7 @@ handle_default() {
     fi
 }
 
-url=$(sort ~/bookmarks | awk '{gsub(/:.*/, ""); print}' | dmenu -i -p "Select a Bookmark" | awk '{system("grep "$1" ~/bookmarks")}' | sed 's/.*://')
+url=$(sort ~/bookmarks | sed 's/:.*//' | dmenu -i -p "Select a Bookmark" | xargs -I % grep "%:" ~/bookmarks | sed 's/.*://')
 
 if [ $url ]; then
     # Special handling for browsers that support tabbing

@@ -2,7 +2,7 @@
 
 ## bm
 
-Browser independant bookmark manager
+Browser independant bookmarks
 
 ### Dependencies
 
@@ -19,6 +19,14 @@ Toggle my external display and correct for TV overscan
 ## prompt
 
 Simple confirmation prompt using dmenu
+
+### Dependencies
+
++ dmenu
+
+## sch
+
+Browser independent search engine querying
 
 ### Dependencies
 

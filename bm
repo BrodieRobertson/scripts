@@ -1,0 +1,23 @@
+#!/bin/sh
+# Splits each line of my bookmarks file into an option to be passed into dmenu,
+# the selected value in dmenu is used to load up a new window/tab in the selected
+# browser
+
+handle_default() {
+    if [ ! -z "$1" ]; then
+        "$1" "$url"
+    elif [ ! -z "$BROWSER" ]; then
+        "$BROWSER" "$url"
+    fi
+}
+
+url=$(sort ~/bookmarks | awk '{gsub(/:.*/, ""); print}' | dmenu -i -p "Select a Bookmark" | awk '{system("grep "$1" ~/bookmarks")}' | sed 's/.*://')
+
+if [ $url ]; then
+    # Special handling for browsers that support tabbing
+    case "$1" in
+        "firefox") firefox --new-tab "$url" ;;
+        *) handle_default ;;
+    esac
+fi
+

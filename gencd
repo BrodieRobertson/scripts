@@ -1,4 +1,0 @@
-#!/bin/sh
-sed "s/^/alias /; s/,/='cd /; s/'*$/'/" ~/.autocd > .tempcd 
-sed -i '/# cd <!>/,/# <!->/{//!d;}; /# cd <!>/r .tempcd' ~/.bashrc
-rm .tempcd

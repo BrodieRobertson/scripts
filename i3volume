@@ -1,0 +1,4 @@
+#!/bin/sh
+master=$(amixer get Master | grep Mono | awk '{print $4}' | sed 's/\[//;s/\]//')
+headphone=$(amixer get Headphone | grep Right: | awk '{print $5}' | sed 's/\[//;s/\]//')
+echo MAS $master HEAD $headphone

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+amixer -c 0 -- set "$1" "$2"
+pkill -SIGRTMIN+1 i3blocks

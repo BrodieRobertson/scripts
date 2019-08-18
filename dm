@@ -8,3 +8,4 @@ else
     xrandr --output "$extern" --set audio force-dvi --mode 1920x1080
     xrandr --output "$intern" --auto --output "$extern" --right-of "$intern"
 fi
+

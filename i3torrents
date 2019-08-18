@@ -1,0 +1,7 @@
+#!/bin/sh
+torrents=$(transmission-remote -l)
+downloading=$(echo "$torrents" | grep "Downloading\|Up & Down" | wc -l)
+paused=$(echo "$torrents" | grep "Stopped" | wc -l)
+seeding=$(echo "$torrents" | grep "Seeding" | wc -l)
+
+echo "DOWN $downloading PAUS $paused SEED $seeding"

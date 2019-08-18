@@ -1,0 +1,9 @@
+#!/bin/sh
+weather=$(curl wttr.in/Adelaide?format=%t+%h+%p)
+var=
+if [ $(echo "$weather" | wc -l) -gt 1 ]; then
+    echo "WEATHER UNAVAILABLE"
+else
+    echo "$weather" | awk '{print "TEMP " $1, "HUM " $2, "PREC " $3}'
+fi
+

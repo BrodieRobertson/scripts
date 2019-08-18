@@ -1,8 +1,6 @@
 #!/bin/sh
 
 # Mime map script for adding a magnet link to transmission, and starts the daemon if it's not running
-#if [ pgrep -x transmission-daemon > /dev/null ]; then
-#    transmission-daemon
-#fi
+pgrep -x transmission-daemon > /dev/null || transmission-daemon
 
-transmission-remote --add "$@"
+transmission-remote --add "$@" && notify-send "Transmission-daemon" "Torrent added." && pkill -SIGRTMIN i3blocks

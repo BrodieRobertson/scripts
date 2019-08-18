@@ -1,2 +1,2 @@
 #!/bin/sh
-transmission-remote -l | awk '$2 == "100%"{ system("transmission-remote -t " $1 " --remove") }'
+transmission-remote -l | awk '$2 == "100%"{ system("transmission-remote -t " $1 " --remove") }' && pkill -SIGRTMIN i3blocks

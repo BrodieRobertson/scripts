@@ -1,9 +1,9 @@
 #!/bin/sh
 handle_default() {
     if [ ! -z "$1" ]; then
-        "$1" "$2"
+        setsid "$1" "$2"
     elif [ ! -z "$BROWSER" ]; then
-        $BROWSER "$2"
+        setsid "$BROWSER" "$2"
     fi
 }
 

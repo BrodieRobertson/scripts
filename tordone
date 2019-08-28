@@ -1,2 +1,2 @@
 #!/bin/sh
-notify-send "Transmission-daemon" "$TR_TORRENT_NAME has completely downloaded" && pkill -SIGRTMIN i3blocks
+notify-send "Transmission-daemon" "$TR_TORRENT_NAME has completely downloaded" && pkill -SIGRTMIN+2 i3blocks

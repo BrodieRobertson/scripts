@@ -3,6 +3,6 @@
 # the selected value in dmenu is used to load up a new window/tab in the selected
 # browser
 
-url=$(sort ~/bookmarks | sed 's/:.*//' | dmenu -i -p "Select a Bookmark" | xargs -I % grep "%:" ~/bookmarks | sed 's/.*://')
+url=$(sort ~/.config/bookmarks | sed 's/:.*//' | dmenu -i -p "Select a Bookmark" | xargs -I % grep "%:" ~/.config/bookmarks | sed 's/.*://')
 
 opnbrow "$1" "$url"

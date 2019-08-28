@@ -1,4 +1,7 @@
 #!/bin/sh
+# Toggle on/off an external HDMI monitor, does not support audio over HDMI as it's pretending that it's DVI
+# I should make this handle more general types but it's fine for now
+
 intern="eDP-1"
 extern="HDMI-1"
 

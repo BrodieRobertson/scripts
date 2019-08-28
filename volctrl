@@ -1,4 +1,6 @@
 #!/bin/sh
+# Changes the volume level of an audio track
+# Signals an update in i3blocks for the i3volume block
 
 amixer -c 0 -- set "$1" "$2"
 pkill -SIGRTMIN+1 i3blocks

@@ -1,2 +1,4 @@
 #!/bin/sh
+# Starts transmission-rss in the background
+
 transmission-rss -f

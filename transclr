@@ -1,2 +1,5 @@
 #!/bin/sh
+# Clears out all completed torrents in transmission
+# Signals an update i3blocks for the i3torrents block
+
 transmission-remote -l | awk '$2 == "100%"{ system("transmission-remote -t " $1 " --remove") }' && pkill -SIGRTMIN+2 i3blocks

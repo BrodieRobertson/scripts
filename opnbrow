@@ -1,4 +1,6 @@
 #!/bin/sh
+# Handler script for opening a link in a browser
+
 handle_default() {
     if [ ! -z "$1" ]; then
         setsid "$1" "$2"

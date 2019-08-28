@@ -1,8 +1,9 @@
 #!/bin/sh
-# Mount and unmount an android device
+# Mount and unmount an android device to the ~/cell folder
+
 if [ $(ls ~/cell | wc -l) -gt 0 ]; then
-    fusermount -u cell/
+    fusermount -u ~/cell/
 else
-    simple-mtpfs --device 1 cell/
+    simple-mtpfs --device 1 ~/cell/
 fi
 

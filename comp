@@ -1,4 +1,5 @@
 #!/bin/sh
+# General handler for compiling files
 
 file=$(readlink -f "$1")
 base=$(echo $file | sed 's/\..*//')

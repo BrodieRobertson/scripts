@@ -16,5 +16,5 @@ fi
 
 # Open browser if search query provided
 if [ ! -z "$search" -a "$search" != "" ]; then
-    opnbrow "$1" "$url$(encode $search)"
+    opnbrow "$1" "$url$(encode "$search")"
 fi

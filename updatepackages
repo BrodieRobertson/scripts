@@ -1,0 +1,4 @@
+#!/bin/sh
+# Opens a prompt to confirm whether I wish to update the system
+
+notify-send "Updates Available" "$(sudo pacman -Qu)" && prompt "Are you sure you would like to update?" "sudo pacman -Syu" && pkill -SIGRTMIN+3 i3blocks

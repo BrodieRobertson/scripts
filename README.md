@@ -31,6 +31,14 @@ Toggle my external display and correct for TV overscan
 
 Performs HTML encoding on a string
 
+## i3speedtest
+
+i3block script for displaying the current network speed
+
+### Dependencies
+
++ speedtest-cli
+
 ## i3torrents
 
 i3block script for displaying the current torrents in transmission
@@ -131,6 +139,15 @@ Opens transmission-rss in the background
 ### Dependencies
 
 + transmission-rss
+
+## updatepackages
+
+Opens a prompt to confirm whether I wish to update my system
+
+### Dependencies
+
++ prompt
++ pacman
 
 ## volctrl
 

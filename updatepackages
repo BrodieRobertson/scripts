@@ -1,4 +1,4 @@
 #!/bin/sh
-# Opens a prompt to confirm whether I wish to update the system
+# Opens a terminal to update pacman packages and handle updating my i3block
 
-notify-send "Updates Available" "$(sudo pacman -Qu)" && prompt "Are you sure you would like to update?" "sudo pacman -Syu" && pkill -SIGRTMIN+3 i3blocks
+notify-send "Updates Available" "$(sudo pacman -Qu)" && urxvt -e sudo pacman -Su && pkill -SIGRTMIN+3 i3blocks

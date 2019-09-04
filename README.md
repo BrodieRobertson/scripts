@@ -72,6 +72,23 @@ i3block script for displaying the current wifi connectivity
 + fusermount
 + simple-mtpfs
 
+## mntanndroid
+
+Handler script for mounting and unmounting an android device
+
+### Dependencies
+
++ simple-mtpfs
++ fusermount
+
+## notifytorrents
+
+Displays the torrents currently in transmission in a notification
+
+### Dependencies
+
++ tranmisson-remote
+
 ## opnbrow
 
 Handler script for opening different browsers

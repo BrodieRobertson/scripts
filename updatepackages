@@ -1,4 +1,4 @@
 #!/bin/sh
 # Opens a terminal to update pacman packages and handle updating my i3block
 
-urxvt -e sudo pacman -Su && pkill -SIGRTMIN+3 i3blocks
+$TERMINAL -e sudo pacman -Su && pkill -SIGRTMIN+3 i3blocks

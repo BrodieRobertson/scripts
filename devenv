@@ -1,0 +1,15 @@
+#!/bin/sh
+# Opens a series of terminals and a co
+repo="$(ls ~/repos | dmenu -i -p 'Repo')"
+config="$(grep $repo ~/.config/devenv/config | sed 's/.*://')"
+reporoot="/home/brodie/repos/$repo"
+
+for i in $config; do
+    cd "$reporoot"
+    case "$i" in
+        "r") st & ;;
+        "f") cd frontend && $TERMINAL & ;;
+        "b") cd backend && $TERMINAL & ;;
+        "v") $CODEEDITOR $reporoot & ;;
+    esac
+done

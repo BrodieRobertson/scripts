@@ -1,0 +1,30 @@
+#!/bin/sh
+# Prompts me for what files I would like to import from my phone and
+# where I would like to import them too
+
+configs="/home/brodie/.config/import"
+original="$(grep "originallocation" "$configs/config" | sed 's/.*://')"
+
+types="$(sort $configs"/types" | dmenu -i -p "File Type")"
+location="$(sort $configs"/locations" | dmenu -i -p "Import Location")"
+days="$(echo "" | dmenu -i -p "From How Many Days Ago")"
+files="$(ls --full-time "$original" | grep -E ".*$types" | awk '{print $6":"$9}')"
+
+# Exit out of script if no files or they can't be read
+if [ -z "$files" ]; then
+    notify-send "Import Error" "Unable To Read Files"
+    exit 1
+fi
+
+mindate="$(echo "$days" | xargs -I _ date -d "_ day ago" +%b-%d-%Y | sed 's/-/ /g' | xargs -I _ date -d _ +"%s")"
+
+# Loop through all the files in the original directory
+for i in $files; do
+    if [ "$(echo $i | sed 's/:.*//' | xargs -I _ date -d _ +"%s")" -ge $mindate ]; then
+        file="$(echo $i | sed 's/.*://')"
+        notify-send "Import" "Copying $file"
+        echo $file | xargs -I _ cp "$original"_ "$location" || { notify-send "Import Error" "Unable To Copy $file"; exit 1; }
+    fi
+done
+
+notify-send "Import Complete" "All Files Copied"

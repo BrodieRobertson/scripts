@@ -51,13 +51,5 @@ END {
 	}
 	# full text
 	printf("%.1fG/%.1fG", used, total)
-	# color
-	if (pct > 90) {
-		print("#FF0000")
-	} else if (pct > 80) {
-		print("#FFAE00")
-	} else if (pct > 70) {
-		print("#FFF600")
-	}
 }
 ' /proc/meminfo

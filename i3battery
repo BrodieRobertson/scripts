@@ -41,12 +41,12 @@ elsif ($acpi !~ /: ([\w\s]+), (\d+)%/) {
 
 $status = $1;
 $percent = $2;
-$full_text = "$label$percent%";
+$full_text = "";
 
 if ($status eq 'Discharging') {
-	$full_text .= ' DIS';
+	$full_text .= 'DIS ';
 } elsif ($status eq 'Charging') {
-	$full_text .= ' CHR';
+	$full_text .= 'CHR ';
 } elsif ($status eq 'Unknown') {
 	open (AC_ADAPTER, "acpi -a |") or die;
 	$ac_adapt = <AC_ADAPTER>;
@@ -56,14 +56,16 @@ if ($status eq 'Discharging') {
 		$ac_adapt = $1;
 
 		if ($ac_adapt eq 'on-line') {
-			$full_text .= ' CHR';
+			$full_text .= 'CHR ';
 		} elsif ($ac_adapt eq 'off-line') {
-			$full_text .= ' DIS';
+			$full_text .= 'DIS ';
 		}
 	}
+} else {
+    $full_text .= 'BAT '
 }
 
-$short_text = $full_text;
+$full_text .= "$percent%";
 
 if ($acpi =~ /(\d\d:\d\d):/) {
 	$full_text .= " ($1)";
@@ -71,7 +73,6 @@ if ($acpi =~ /(\d\d:\d\d):/) {
 
 # print text
 print "$full_text\n";
-#print "$short_text\n";
 
 # consider color and urgent flag only on discharge
 if ($status eq 'Discharging') {

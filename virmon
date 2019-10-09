@@ -1,0 +1,10 @@
+#!/bin/sh
+if [ -z "$(xrandr --listactivemonitors | grep 'eDP-1~1')" ]; then
+    xrandr --setmonitor eDP-1~1 960/154x1080/173+0+0 eDP-1
+    xrandr --setmonitor eDP-1~2 960/155x1080/173+960+0 none
+    xrandr --fb 1920x1080
+else
+    xrandr --delmonitor eDP-1~1
+    xrandr --delmonitor eDP-1~2
+fi
+

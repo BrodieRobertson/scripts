@@ -10,6 +10,6 @@ for i in $config; do
         "r") st & ;;
         "f") cd frontend && $TERMINAL & ;;
         "b") cd backend && $TERMINAL & ;;
-        "v") $CODEEDITOR $reporoot & ;;
+        "v") $VISUAL $reporoot & ;;
     esac
 done

@@ -1,0 +1,4 @@
+#!/bin/sh
+acpi -t | sed 's/.*, //;s/ degrees /°/'
+echo ""
+

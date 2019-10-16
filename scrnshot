@@ -4,6 +4,7 @@ output=~/pictures/screenshots/"$(date +%s_%h%d_%H:%M:%S).png"
 menu() {
     echo "" | dmenu -p "How Long?" | xargs -I _ sleep "_"
 }
+
 case "$1" in
     "full") maim "$output" || exit;;
     "select") maim -s "$output" || exit ;;

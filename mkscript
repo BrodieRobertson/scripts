@@ -1,0 +1,6 @@
+#!/bin/sh
+printf "File Name: "
+read ans
+touch ~/scripts/"$ans"
+chmod +x ~/scripts/"$ans"
+$EDITOR ~/scripts/"$ans"

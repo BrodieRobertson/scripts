@@ -1,7 +1,23 @@
 #!/bin/sh
 # i3block for displaying the current master and headphone volume
 
-master=$(amixer get Master | grep Mono | awk '{print $4}' | sed 's/\[//;s/\]//')
-headphone=$(amixer get Headphone | grep Right: | awk '{print $5}' | sed 's/\[//;s/\]//')
+master=$(amixer get Master | grep Mono: | awk '{print $4 " " $6}' | sed 's/\[//g;s/\]//g')
+headphone=$(amixer get Headphone | grep Right: | awk '{print $5 " " $7}' | sed 's/\[//g;s/\]//g')
 
-echo 🔊 $master 🎧 $headphone
+printf "🔊 "
+
+if [ "$(echo $master | awk '{print $2}')" == "on" ]; then
+    echo -n "$(echo $master | awk '{print $1}')"
+else
+    echo -n "mute"
+fi
+
+printf " 🎧 "
+
+if [ "$(echo $headphone | awk '{print $2}')" == "on" ]; then
+    echo -n "$(echo $headphone | awk '{print $1}')"
+else
+    echo -n "mute"
+fi
+
+printf "\n"

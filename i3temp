@@ -1,4 +1,10 @@
 #!/bin/sh
-acpi -t | sed 's/.*, //;s/ degrees /°/'
+temp=$(acpi -t | sed 's/.*, //;s/ degrees //;s/C//')
+echo $temp°C
 echo ""
 
+if [ 1 -eq "$(echo "$temp > 85" | bc)" ]; then
+    echo "#FFAE00"
+elif [ 1 -eq "$(echo "$temp > 65" | bc)" ]; then
+    echo "#FFF600"
+fi

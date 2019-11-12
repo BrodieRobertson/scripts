@@ -52,4 +52,11 @@ END {
 	# full text
 	printf("%.1fG/%.1fG", used, total)
 }
-' /proc/meminfo
+' /proc/meminfo 2>&- || {
+	PARSE(){
+		ERE='^Mem:\s+([0-9.]+[a-Z])\s+([0-9.]+[a-Z]).*'
+		{ free -h | sed -r '/^Mem/!d; s|'"$ERE"'|\2/\1|'; } 2>&-
+	}
+
+	PARSE $TYPE
+}

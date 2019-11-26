@@ -2,4 +2,27 @@
 # Clears out all completed torrents in transmission
 # Signals an update i3blocks for the i3torrents block
 
-transmission-remote -l | awk '$2 == "100%"{ system("transmission-remote -t " $1 " --remove") }' && pkill -SIGRTMIN+2 i3blocks
+transmission-remote -l | while read Line; do
+	FieldCount=0
+	for Field in $Line; do
+		FieldCount=$(( FieldCount + 1 ))
+
+		if [ $Field -eq 1 ]; then
+			FieldOne=$Field
+		elif [ $Field -eq 2 ]; then
+			if [ "$FieldOne" = '100%' ]; then
+				if transmission-remote -t "$FieldOne" --remove; then
+					Valid='true'
+				fi
+
+				break
+			fi
+		else
+			break
+		fi
+	done
+done
+
+if [ "$Valid" = 'true' ]; then
+	pkill -SIGRTMIN+2 i3blocks
+fi

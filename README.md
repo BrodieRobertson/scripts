@@ -2,7 +2,7 @@
 
 ## bm
 
-Browser independant bookmarks
+Browser independent bookmarks
 
 ### Dependencies
 
@@ -65,14 +65,14 @@ i3block script for displaying the current weather
 
 ## i3wifi
 
-i3block script for displaying the current wifi connectivity
+i3block script for displaying the current WIFI connectivity
 
 ### Dependencies
 
 + fusermount
 + simple-mtpfs
 
-## mntanndroid
+## mntandroid
 
 Handler script for mounting and unmounting an android device
 
@@ -87,7 +87,7 @@ Displays the torrents currently in transmission in a notification
 
 ### Dependencies
 
-+ tranmisson-remote
++ transmisson-remote
 
 ## opnbrow
 

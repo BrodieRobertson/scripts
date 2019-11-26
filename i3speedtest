@@ -1,3 +1,6 @@
 #!/bin/sh
 # i3block for displaying the current network speed
-speedtest-cli | grep -E "Download|Upload" | awk '{print $2}' | tr '\n' ' ' | awk '{print "📥 " $1 " " "📤 " $2}'
+
+speedtest-cli --secure --simple | awk -SP '
+	/^Download:/{printf("📥  %s ", $2)} /^Upload:/{printf("📤  %s", $2)}
+'

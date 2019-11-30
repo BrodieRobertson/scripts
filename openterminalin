@@ -1,0 +1,9 @@
+#!/bin/sh
+
+dfm
+dir="$(cat ~/.config/dmenufm/dmenufm_lastpath)"
+
+if [ -d "$dir" ]; then
+    cd "$dir"
+    $TERMINAL
+fi

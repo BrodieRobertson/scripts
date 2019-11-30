@@ -11,13 +11,14 @@ FM_TRASH_PATH="$FM_PATH/trash"
 BMKFILE="$FM_PATH/dmenufm_bookmark"
 CMDFILE="$FM_PATH/dmenufm_command"
 HISFILE="$FM_PATH/dmenufm_history"
+LASTPATHFILE="$FM_PATH/dmenufm_lastpath"
 MAX_HIS_LENGTH=5000
 XDGDIR1="/usr/share/applications"
 XDGDIR2="/usr/local/share/applications"
 # FONT
-GENEFONT="Source Code Pro Medium-14"
-NOTIFONT="Source Code Pro Medium-14"
-DANGERFONT="Source Code Pro Medium-16"
+GENEFONT="Source Code Pro Medium-18"
+NOTIFONT="Source Code Pro Medium-16"
+DANGERFONT="Source Code Pro Medium-18"
 
 
 ## GLOBAL VARIABLES
@@ -30,12 +31,12 @@ TERM="Terminal"
 FM_CP_PATH="PCP - Copy path"
 FM_NEW="NEW - Create new file / directory"
 FM_RM="RMM - Remove files / directory"
-FM_MV="MVV - Move files"
+FM_MVR="MVR - Move files"
 FM_TRASH="TRH - Trash of dmenufm"
 FM_HIST="HIS - History of dmenufm"
 FM_BMARK="BMK - Bookmark for dmenufm"
 FM_COMMAND="CMD - Frequently used command"
-ACTLIST="$FM_CP_PATH:$FM_NEW:$FM_MV:$FM_RM:$FM_TRASH:$FM_HIST:$FM_BMARK:$FM_COMMAND"
+ACTLIST="$FM_CP_PATH:$FM_NEW:$FM_MVR:$FM_RM:$FM_TRASH:$FM_HIST:$FM_BMARK:$FM_COMMAND"
 
 
 
@@ -139,10 +140,10 @@ Generate_action_menu () {
 			cd "$actCHOICE" || exit 1
 			dmenufm_history
 			continue
-		elif [ -f "$actCHOICE" ]; then
+		elif [ -f "$actCHOICE" ] || [ -n "$rename" ]; then
 			HERE=$(printf '%s' "$PWD/$actCHOICE")
 			name=$(printf '%s' "$HERE" | awk -F '/' '{print $NF}')
-		 	break
+			break
 		else
 			HERE=
 			name=
@@ -197,6 +198,8 @@ dmenufm_history () {
 
 
 # Actions that for dmenufm
+# Note: Use `[ -n "$VAR" ]` after each menu to check whether the menu is correctly execute.
+# 	If not, then the later command will not execute.
 dmenufm_action (){
 	move=$(printf '%s' "$ACTLIST" | tr ':' '\n' | verticalprompt "Actions:" "#005577")
 	case $move in
@@ -213,12 +216,14 @@ dmenufm_action (){
 				:>"$name" && notifyprompt "File $name created."
 			fi
 			;;
-		"$FM_MV")
+		"$FM_MVR")
 			Generate_action_menu "Source: " "#33691e" || return
-			[ -n "$HERE" ] && start="$HERE" && startname="$name"
-			[ -n "$start" ] && Generate_action_menu "Destination: " "#FF8C00" || return
+			[ -n "$HERE" ] && start="$HERE" && startname="$name" && rename="true"
+			[ -d "$start" ] && cd "../"
+			[ -n "$start" ] && Generate_action_menu "Destination / Type rename: " "#FF8C00" || return && rename=
 			[ -n "$HERE" ] && destination="$HERE" && destname="$name"
 			[ -n "$HERE" ] && mv "$start" "$destination" && notifyprompt "$startname moved to $destname"
+			rename=
 			;;
 		"$FM_RM")
 			# Choose file/directory in current directory to remove
@@ -299,7 +304,9 @@ dmenufm_action (){
 					;;
 				*)
 					destination=$(printf '%s' "$markmenu" | awk -F ' - ' '{print $2}')
-					[ -n "$destination" ] && cd "$destination" || open "$destination"
+					if [ -n "$destination" ]; then
+						cd "$destination" || open "$destination"
+					fi
 			esac
 			;;
 		"$FM_COMMAND")
@@ -382,12 +389,16 @@ while [ -n "$1" ]; do
 		"-F"|"--dotfile" )
 			keeplist="${keeplist} DOTFILEs"
 			;;
+		"-p"|"--lastpath" )
+			outputpath="placeholder"
+			;;
 		"-h"|"--help" )
-			printf "Optional arguments for custom use:
-			-d | --directory: menu is directories, no input
-			-f | --file: menu is files, no input
-			-D | --dotdirectory: menu is hidden directories, no input
-			-F | --dotfile: menu is hidden files, no input
+			printf " Optional arguments for custom usage:
+			-d | --directory: only directories
+			-f | --file: only show files
+			-D | --dotdirectory: only show hidden directories
+			-F | --dotfile: only show hidden files
+			-p | --lastpath: opens in last working directory (cd on exit)
 			-h | --help: Show this message\\n"
 			exit 0
 			;;
@@ -400,4 +411,10 @@ while [ -n "$1" ]; do
 done
 
 ### RUN THE MAIN FUNCTION
+
+# --lastpath option:
+[ -n "$outputpath" ] && cd "$(cat "$LASTPATHFILE")"
+
 dmenufm_menu
+
+printf '%s' "$PWD" > "$LASTPATHFILE"

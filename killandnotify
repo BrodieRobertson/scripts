@@ -1,0 +1,2 @@
+#!/bin/sh
+pgrep "$1" | xargs -I % kill -9 % && notify-send "$1" "$2"

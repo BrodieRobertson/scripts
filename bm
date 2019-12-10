@@ -5,4 +5,5 @@
 
 url=$(sort ~/.config/bookmarks | sed 's/:.*//' | dmenu -i -p "Select a Bookmark" | xargs -I % grep "%:" ~/.config/bookmarks | sed 's/.*://')
 
+echo "$url"
 opnbrow "$1" "$url"

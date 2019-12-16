@@ -2,26 +2,22 @@
 # Changes the volume level of an audio track
 # Signals an update in i3blocks for the i3volume block
 
-if [ $1 == "All" ]; then
-    if [ $2 == "mute" ]; then
+if [ $1 = "All" ]; then
+    if [ $2 = "mute" ]; then
         volume="$(i3volume)"
 
-        # Mute master
-        if [ $(echo $volume | awk '{print $2}') == "mute" ]; then
-            amixer -c 0 -- set "Master" "unmute"
+        if [ -z $(echo $volume | grep "mute") ]; then
+            amixer set "Master" "mute"
+            amixer set "Headphone" "mute"
+            amixer set "Speaker" "mute"
         else
-            amixer -c 0 -- set "Master" "mute"
-        fi
-
-        # Mute headphone
-        if [ $(echo $volume | awk '{print $4}') == "mute" ]; then
-            amixer -c 0 -- set "Headphone" "unmute"
-        else
-            amixer -c 0 -- set "Headphone" "mute"
+            amixer set "Master" "unmute"
+            amixer set "Headphone" "unmute"
+            amixer set "Speaker" "unmute"
         fi
     fi
 else
-    amixer -c 0 -- set "$1" "$2"
+    amixer set "$1" "$2"
 fi
 
 pkill -SIGRTMIN+1 i3blocks

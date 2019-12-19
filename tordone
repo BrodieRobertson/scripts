@@ -2,4 +2,4 @@
 # Sends a notification when a torrent is completed in transmission
 # Signals an update in i3blocks for the i3torrents block
 
-notify-send "Transmission-daemon" "$TR_TORRENT_NAME has completely downloaded" && pkill -SIGRTMIN+2 i3blocks
+notify-send "Transmission-daemon" "$TR_TORRENT_NAME has completely downloaded" && polybar-msg hook torrents 1  #&& pkill -SIGRTMIN+2 i3blocks

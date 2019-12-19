@@ -5,4 +5,4 @@
 
 pgrep -x transmission-daemon > /dev/null || transmission-daemon
 
-transmission-remote --add "$@" && notify-send "Transmission-daemon" "Torrent added." && pkill -SIGRTMIN+2 i3blocks
+transmission-remote --add "$@" && notify-send "Transmission-daemon" "Torrent added." && polybar-msg hook torrents 1 #&& pkill -SIGRTMIN+2 i3blocks

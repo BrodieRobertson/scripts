@@ -20,4 +20,5 @@ else
     amixer set "$1" "$2"
 fi
 
-pkill -SIGRTMIN+1 i3blocks
+#pkill -SIGRTMIN+1 i3blocks
+polybar-msg hook volume 1

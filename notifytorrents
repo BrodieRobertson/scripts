@@ -3,5 +3,6 @@
 torrents="$(transmission-remote -l | sed '/Sum/d')"
 notify-send "$(echo "$torrents" | sed '1q' | awk '{print $2 "\t" $3 "\t\t" $9}')" "$(echo "$torrents" | sed '1d' | awk '{printf $2 "\t" $3 " " $4"\t"}{for(i = 10; i < 30; i++) printf $i" "}{print ""}')"
 
+polybar-msg -p $(pidof "polybar") hook torrents 1
 #awk '{print $2 "\t" $3 "\t"}{for(i = 9; i < 20; i++) printf $i}'
 #echo "$torrents" | sed '1d' | awk '{printf $2 "\t" $3}{for(i = 1; i < 10; i++) $i=""}{print}'

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ -z $(pidof polybar) ]; then
+  launchpolybar &
+else
+  polybar-msg cmd restart
+fi

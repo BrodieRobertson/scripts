@@ -3,6 +3,8 @@
 
 master=$(amixer get Master | grep Mono: | awk '{print $4 " " $6}' | sed 's/\[//g;s/\]//g')
 headphone=$(amixer get Headphone | grep Right: | awk '{print $5 " " $7}' | sed 's/\[//g;s/\]//g')
+speaker=$(amixer get Speaker | grep Right: | awk '{print $5 " " $7}' | sed 's/\[//g;s/\]//g')
+echo $speaker
 
 printf "🔊 "
 
@@ -16,6 +18,14 @@ printf " 🎧 "
 
 if [ "$(echo $headphone | awk '{print $2}')" == "on" ]; then
     echo -n "$(echo $headphone | awk '{print $1}')"
+else
+    echo -n "mute"
+fi
+
+printf " 📻 "
+
+if [ "$(echo $speaker | awk '{print $2}')" == "on" ]; then
+    echo -n "$(echo $speaker | awk '{print $1}')"
 else
     echo -n "mute"
 fi

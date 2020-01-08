@@ -1,6 +1,6 @@
 v4l2-ctl -d /dev/video2 --set-ctrl=focus_auto=0
 v4l2-ctl -d /dev/video2 --set-ctrl=exposure_auto=1
-v4l2-ctl -d /dev/video2 --set-ctrl=focus_absolute=20
+v4l2-ctl -d /dev/video2 --set-ctrl=focus_absolute=5
 v4l2-ctl -d /dev/video2 --set-ctrl=exposure_absolute=400
 v4l2-ctl -d /dev/video2 --set-ctrl=brightness=120
 v4l2-ctl -d /dev/video2 --set-ctrl=saturation=170

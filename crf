@@ -1,0 +1,2 @@
+#!/bin/sh
+echo -e "import React from \"react\";\n\nconst $1 = () => {\n\treturn <div></div>;\n};\n\nexport default $1;" > $(pwd)/$2/$1.js

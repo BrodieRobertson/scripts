@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-surfraw -browser=firefox "$(cat ~/.config/surfraw/bookmarks | sed '/^$/d' | sed '/^#/d' | sed '/^\//d' | sort -n | $ada -i -p "bookmarks: ")"
+surfraw -browser=firefox "$(cat ~/.config/surfraw/bookmarks | sed '/^$/d' | sed '/^#/d' | sed '/^\//d' | sort -n | dmenu -i -p "bookmarks: ")"

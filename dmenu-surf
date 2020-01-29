@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-surfraw -browser=firefox $(sr -elvi | awk -F'-' '{print $1}' | sed '/:/d' | awk '{$1=$1};1' | $ada -i -p "Search: " )
+surfraw -browser=firefox $(sr -elvi | awk -F'-' '{print $1}' | sed '/:/d' | awk '{$1=$1};1' | dmenu -i -p "Search: " )

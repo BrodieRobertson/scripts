@@ -174,7 +174,7 @@ Changes the volume of a specified volume track
 
 + amixer
 
-## dmenu-surf/dmenu-surf-bookmarkA
+## dmenu-surf/dmenu-surf-bookmark
 
 Search Engine using dmenu
 

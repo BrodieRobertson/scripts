@@ -176,7 +176,7 @@ Changes the volume of a specified volume track
 
 ## dmenu-surf/dmenu-surf-bookmark
 
-Search Engine using dmenu
+More search Engine using dmenu
 
 ### Dependencies
 

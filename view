@@ -1,0 +1,19 @@
+#!/bin/sh
+# Open up files in a read only mode, only makes sense for files where this is applicable
+
+libre() {
+  pdffile=$(echo "$1" | grep -o ".*\.")"pdf"
+  libreoffice --convert-to pdf $1 --headless >/dev/null 2>&1 && $READER $pdffile && rm $pdffile
+}
+case $1 in
+  *.odt) libre "$1";;
+  *.mkv|*.mp4) $VIDEO "$1";;
+  *.png|*.jpg|*.jpeg) sxiv "$1";;
+  *.pdf) $READER "$1";;
+  *) less "$1" ;;
+esac
+
+
+
+
+

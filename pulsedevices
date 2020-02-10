@@ -1,0 +1,1 @@
+pactl list sinks | grep 'Name\|Mute\|Volume:'

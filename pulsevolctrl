@@ -1,0 +1,12 @@
+#!/bin/sh
+# Changes the volume level of an audio track
+# Signals an update in polybar for the volume module
+
+if [ $1 = "output-vol" ]; then
+  pactl set-sink-volume "$2" "$3"
+elif [ $1 = "output-mute" ]; then
+  pactl set-sink-mute "$2" toggle
+fi
+
+#pkill -SIGRTMIN+1 i3blocks
+polybar-msg hook volume 1

@@ -5,19 +5,30 @@
 
 VERTICALLINES=""
 MONITOR=""
-FONT="Mono-12"
-BACKGROUNDCOLOR="#1d1f21"
-SELECTEDBACKGROUNDCOLOR="#444"
-FOREGROUNDCOLOR="#d8dee9"
-SELECTEDFOREGROUNDCOLOR="#268bd2"
-SEPERATOR=":"
-BOOKMARKS="~/.config/bookmenu/bookmarks"
-BOOKMARK=""
-CONFIG="~/.config/bookmenu/config"
-COMMAND="$BROWSER"
-PROMPT="Select a bookmark"
+FONT=""
+BACKGROUNDCOLOR=""
+SELECTEDBACKGROUNDCOLOR=""
+FOREGROUNDCOLOR=""
+SELECTEDFOREGROUNDCOLOR=""
+SEPERATOR=""
+BOOKMARKS=""
+CONFIG=""
+COMMAND=""
+PROMPT=""
 
-SAWOPTION=false
+DEFAULTVERTICALLINES=""
+DEFAULTMONITOR=""
+DEFAULTFONT="Mono-12"
+DEFAULTBACKGROUNDCOLOR="#1d1f21"
+DEFAULTSELECTEDBACKGROUNDCOLOR="#444"
+DEFAULTFOREGROUNDCOLOR="#d8dee9"
+DEFAULTSELECTEDFOREGROUNDCOLOR="#268bd2"
+DEFAULTSEPERATOR=":"
+DEFAULTBOOKMARKS=~/.config/bookmenu/bookmarks
+DEFAULTCONFIG=~/.config/bookmenu/config
+DEFAULTCOMMAND="$BROWSER"
+DEFAULTPROMPT="Select a bookmark"
+
 LASTOPTION=""
 
 helppage() {
@@ -26,9 +37,8 @@ helppage() {
 
 handleoption() {
   # Handle invalid arguments
-  if echo "$1" | grep -Eq '\-(m|l|p|fn|nb|sb|sf|co|br|c|b|s)'; then
+  if echo "$1" | grep -Eq '\-(m|l|p|fn|nb|sb|sf|co|c|b|s)'; then
     LASTOPTION=$var
-    SAWOPTION=true
   elif echo "$1" | grep -Eq '\-h'; then
     helppage
     exit
@@ -39,7 +49,7 @@ handleoption() {
 }
 
 handleargument() {
-  if [ $SAWOPTION = true ]; then
+  if [ ! -z $LASTOPTION ]; then
     case "$LASTOPTION" in
       -l) VERTICALLINES="$1" ;;
       -m) MONITOR="$1" ;;
@@ -49,17 +59,16 @@ handleargument() {
       -nf) FOREGROUNDCOLOR="$1" ;;
       -sb) SELECTEDBACKGROUNDCOLOR="$1" ;;
       -sf) SELECTEDFOREGROUNDCOLOR="$1" ;;
-      -b) BOOKMARK="$1" ;;
-      -br) BOOKMARKS="$1" ;;
+      -b) BOOKMARKS="$1" ;;
       -c) CONFIG="$1" ;;
       -co) COMMAND="$1" ;;
       -s) SEPERATOR="$1" ;;
+      *) echo "Invalid option"
   esac
   else
     echo "No option to assign this argument to"
     exit
   fi
-  SAWOPTION=false
   LASTOPTION=""
 }
 
@@ -72,6 +81,39 @@ do
   esac
 done
 
+if [ -z $CONFIG ]; then CONFIG=$DEFAULTCONFIG; fi
+
+# Handle config
+while read line; do
+  value=$(echo $line | sed "s/.*=//")
+  case "$line" in
+    VERTICAL_LINES=*) VERTICALLINES=$value ;;
+    MONITOR=*) MONITOR=$value ;;
+    FONT=*) FONT=$value ;;
+    BACKGROUND_COLOR=*) BACKGROUNDCOLOR=$value ;;
+    SELECTED_BACKGROUND_COLOR=*) SELECTEDBACKGROUNDCOLOR=$value ;;
+    FOREGROUND_COLOR=*) FOREGROUNDCOLOR=$value ;;
+    SELECTED_FOREGROUND_COLOR=*) SELECTEDFOREGROUNDCOLOR=$value ;;
+    SEPERATOR=*) SEPERATOR=$value ;;
+    BOOKMARKS_LOCATION=*) BOOKMARKS=$value ;;
+    COMMAND=*) COMMAND=$value ;;
+    PROMPT_TEXT=*) PROMPT=$value ;;
+    *) echo "Invalid configuration";;
+  esac
+done < $CONFIG
+
+# Fill in rest with defaults
+if [ -z $VERTICALLINES ]; then VERTICALLINES=$DEFAULTVERTICALLINES; fi
+if [ -z $MONITOR ]; then MONITOR=$DEFAULTMONITOR; fi
+if [ -z $FONT ]; then FONT=$DEFAULTFONT; fi
+if [ -z $BACKGROUNDCOLOR ]; then BACKGROUNDCOLOR=$DEFAULTBACKGROUNDCOLOR; fi
+if [ -z $SELECTEDBACKGROUNDCOLOR ]; then SELECTEDBACKGROUNDCOLOR=$DEFAULTSELECTEDBACKGROUNDCOLOR; fi
+if [ -z $FOREGROUNDCOLOR ]; then FOREGROUNDCOLOR=$DEFAULTFOREGROUNDCOLOR; fi
+if [ -z $SELECTEDFOREGROUNDCOLOR ]; then SELECTEDFOREGROUNDCOLOR=$DEFAULTSELECTEDFOREGROUNDCOLOR; fi
+if [ -z $SEPERATOR ]; then SEPERATOR=$DEFAULTSEPERATOR; fi
+if [ -z $BOOKMARKS ]; then BOOKMARKS=$DEFAULTBOOKMARKS; fi
+if [ -z $COMMAND ]; then COMMAND=$DEFAULTCOMMAND; fi
+if [ -z $PROMPT ]; then PROMPT=$DEFAULTPROMPT; fi
 
 bookmark=$(sort $BOOKMARKS | sed "s/$SEPERATOR.*//" | dmenu -i -p "$PROMPT" -fn "$FONT" -l "$VERTICALLINES" -m "$MONITOR" -nb "$BACKGROUNDCOLOR" -nf "$FOREGROUNDCOLOR" -sb "$SELECTEDBACKGROUNDCOLOR" -sf "$SELECTEDFOREGROUNDCOLOR" | xargs -I % grep "%$SEPERATOR" $BOOKMARKS | sed "s/.*$SEPERATOR//;")
 
@@ -100,4 +142,3 @@ case "$bookmark" in
   ~\/*|\/*) filesystem ;;
   *) website ;;
 esac
-

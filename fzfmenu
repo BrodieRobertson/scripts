@@ -15,8 +15,6 @@ BOOKMARKS=""
 CONFIG=""
 COMMAND=""
 PROMPT=""
-FUZZY_FINDER=""
-ECHO_PATH=""
 
 DEFAULTVERTICALLINES=""
 DEFAULTMONITOR=""
@@ -30,7 +28,6 @@ DEFAULTBOOKMARKS=~/.config/bookmenu/bookmarks
 DEFAULTCONFIG=~/.config/bookmenu/config
 DEFAULTCOMMAND="$BROWSER"
 DEFAULTPROMPT="Select a bookmark"
-DEFAULT_FUZZY_FINDER="dmenu"
 
 LASTOPTION=""
 
@@ -38,35 +35,19 @@ helppage() {
   echo "Future Help Page"
 }
 
-options='\-(m|l|p|fn|nb|sb|sf|co|c|b|sp|f)'
-
-# Handles the parsing of options to check if they're valid
 handleoption() {
-  if echo "$1" | grep -Eq $options; then
-    if [ -z "$LASTOPTION" ]; then
-      LASTOPTION=$var
-    elif echo "$LASTOPTION" | grep -Eq $options ; then
-      echo "$LASTOPTION requires an argument" && exit
-    fi
+  # Handle invalid arguments
+  if echo "$1" | grep -Eq '\-(m|l|p|fn|nb|sb|sf|co|c|b|s)'; then
+    LASTOPTION=$var
   elif echo "$1" | grep -Eq '\-h'; then
     helppage
     exit
-  elif echo "$1" | grep -Eq '\-o'; then
-    ECHO_PATH="true"
-  elif echo "$1" | grep -Eq '\-g'; then
-    if [ -d ~/.config/bookmenus ]; then
-      echo "exists"
-    else
-      echo "doesn't"
-    fi
-
   else
     echo "Invalid option"
     exit
   fi
 }
 
-# Handles the assignment of arguments to the previous option passed in
 handleargument() {
   if [ ! -z $LASTOPTION ]; then
     case "$LASTOPTION" in
@@ -81,8 +62,7 @@ handleargument() {
       -b) BOOKMARKS="$1" ;;
       -c) CONFIG="$1" ;;
       -co) COMMAND="$1" ;;
-      -sp) SEPERATOR="$1" ;;
-      -f) FUZZY_FINDER="$1" ;;
+      -s) SEPERATOR="$1" ;;
       *) echo "Invalid option"
   esac
   else
@@ -92,7 +72,7 @@ handleargument() {
   LASTOPTION=""
 }
 
-# Loop through each value passed in
+# Handle the arguments
 for var in "$@"
 do
   case "$var" in
@@ -103,7 +83,7 @@ done
 
 if [ -z $CONFIG ]; then CONFIG=$DEFAULTCONFIG; fi
 
-# Handle the assignment of config values
+# Handle config
 while read line; do
   value=$(echo $line | sed "s/.*=//")
   case "$line" in
@@ -118,11 +98,11 @@ while read line; do
     BOOKMARKS_LOCATION=*) BOOKMARKS=$value ;;
     COMMAND=*) COMMAND=$value ;;
     PROMPT_TEXT=*) PROMPT=$value ;;
-    FUZZY_FINDER=*) FUZZY_FINDER=$value ;;
   esac
 done < $CONFIG
 
-# Fill in any blank spots with default values
+echo $DEFAULTFONT
+# Fill in rest with defaults
 if [ -z "$VERTICALLINES" ]; then VERTICALLINES="$DEFAULTVERTICALLINES"; fi
 if [ -z "$MONITOR" ]; then MONITOR="$DEFAULTMONITOR"; fi
 if [ -z "$FONT" ]; then FONT="$DEFAULTFONT"; fi
@@ -134,23 +114,8 @@ if [ -z "$SEPERATOR" ]; then SEPERATOR="$DEFAULTSEPERATOR"; fi
 if [ -z "$BOOKMARKS" ]; then BOOKMARKS="$DEFAULTBOOKMARKS"; fi
 if [ -z "$COMMAND" ]; then COMMAND="$DEFAULTCOMMAND"; fi
 if [ -z "$PROMPT" ]; then PROMPT="$DEFAULTPROMPT"; fi
-if [ -z "$FUZZY_FINDER" ]; then FUZZY_FINDER="$DEFAULT_FUZZY_FINDER"; fi
 
-# Opens the selected fuzzy finder with the options set
-fuzzy_find() {
-  case "$FUZZY_FINDER" in
-    dmenu) dmenu -i -p "$PROMPT" -fn "$FONT" -l "$VERTICALLINES" -m "$MONITOR" -nb "$BACKGROUNDCOLOR" -nf "$FOREGROUNDCOLOR" -sb "$SELECTEDBACKGROUNDCOLOR" -sf "$SELECTEDFOREGROUNDCOLOR" ;;
-    fzf) fzf ;;
-    *) echo "$FUZZY_FINDER in not a supported fuzzy finder"
-esac
-}
-
-# Selects the path based on the name
-select_path() {
-  xargs -I % grep "%$SEPERATOR" $BOOKMARKS | sed "s/.*$SEPERATOR//;"
-}
-
-bookmark=$(sort $BOOKMARKS | sed "s/$SEPERATOR.*//" | fuzzy_find | select_path)
+bookmark=$(sort $BOOKMARKS | sed "s/$SEPERATOR.*//" | fzf | xargs -I % grep "%$SEPERATOR" $BOOKMARKS | sed "s/.*$SEPERATOR//;")
 
 if [ -z $bookmark ]; then
   echo "No bookmark selected"
@@ -160,11 +125,11 @@ fi
 # Handle urls to the file system
 filesystem() {
   if case $bookmark in ~/*) ;; *) false;; esac; then
-    $COMMAND $bookmark &
+    $COMMAND $bookmark
   else
     fullpath="$HOME/$(echo $bookmark | sed "s/~\///")"
     echo "$fullpath"
-    $COMMAND $fullpath &
+    $COMMAND $fullpath
   fi
 }
 
@@ -173,12 +138,7 @@ website() {
   $COMMAND $bookmark &
 }
 
-if [ -z $ECHO_PATH ]; then
-  case "$bookmark" in
-    ~\/*|\/*) filesystem ;;
-    *) website ;;
-  esac
-else
-  echo "$bookmark"
-fi
-
+case "$bookmark" in
+  ~\/*|\/*) filesystem ;;
+  *) website ;;
+esac

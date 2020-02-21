@@ -1,0 +1,7 @@
+#!/bin/sh
+id=$1
+if [ -z $id ]; then
+  echo ""
+else
+	xprop -id $id | sed -n '/WM_CLASS/s/.*, "\(.*\)"/\1/p'
+fi

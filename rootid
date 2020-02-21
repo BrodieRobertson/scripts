@@ -1,0 +1,2 @@
+#!/bin/sh
+xwininfo -root | awk '/Window id:/{print $4}'

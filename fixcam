@@ -1,8 +1,11 @@
-v4l2-ctl -d /dev/video0 --set-ctrl=focus_auto=0
-v4l2-ctl -d /dev/video0 --set-ctrl=exposure_auto=1
-v4l2-ctl -d /dev/video0 --set-ctrl=focus_absolute=0
-v4l2-ctl -d /dev/video0 --set-ctrl=exposure_absolute=400
-v4l2-ctl -d /dev/video0 --set-ctrl=brightness=120
-v4l2-ctl -d /dev/video0 --set-ctrl=saturation=170
-v4l2-ctl -d /dev/video0 --set-ctrl=contrast=128
-v4l2-ctl -d /dev/video0 --set-ctrl=sharpness=170
+#!/bin/sh
+
+device=$(v4l2-ctl --list-devices | grep "C920" -A 1 | grep "/dev/video." -o)
+v4l2-ctl -d $device --set-ctrl=focus_auto=0
+v4l2-ctl -d $device --set-ctrl=exposure_auto=1
+v4l2-ctl -d $device --set-ctrl=focus_absolute=0
+v4l2-ctl -d $device --set-ctrl=exposure_absolute=400
+v4l2-ctl -d $device --set-ctrl=brightness=120
+v4l2-ctl -d $device --set-ctrl=saturation=170
+v4l2-ctl -d $device --set-ctrl=contrast=128
+v4l2-ctl -d $device --set-ctrl=sharpness=170

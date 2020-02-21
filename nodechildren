@@ -1,0 +1,3 @@
+#!/bin/sh
+id=$1
+xwininfo -id $id -children | sed -n '/[0-9]\+ \(child\|children\):/,$s/ \+\(0x[0-9a-z]\+\).*/\1/p'

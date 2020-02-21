@@ -33,14 +33,6 @@ Simple script to hide all the nodes on a desktop in bspwm
 + pgrep
 + polybar (optional)
 
-### bsppulsevolume
-
-Shows the pulse volume formatted to be show in bspwm
-
-#### Dependencies
-
-+ pulsedevices
-
 ### bspunhide
 
 Simple script to show all the nodes on a desktop in bspwm
@@ -221,6 +213,14 @@ Shows the cpu usage formatted to be shown in polybar
 
 + perl
 + mpstat
+
+### polypulsevolume
+
+Shows the pulse volume formatted to be shown in polybar
+
+#### Dependencies
+
++ pulsedevices
 
 ### polytemp
 

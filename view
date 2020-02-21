@@ -8,7 +8,7 @@ libre() {
 case $1 in
   *.odt) libre "$1";;
   *.mkv|*.mp4) $VIDEO "$1";;
-  *.png|*.jpg|*.jpeg) sxiv "$1";;
+  *.png|*.jpg|*.jpeg) $IMAGE "$1";;
   *.pdf) $READER "$1";;
   *) less "$1" ;;
 esac

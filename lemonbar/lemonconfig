@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+# Outputs a configuration for lemonbar
 Workspaces() {
   desktops=$(bspc query -D --names)
   focused=$(bspc query -D --names -d focused)
@@ -64,9 +65,8 @@ Battery() {
 }
 
 Sound(){
-	NOTMUTED=$( amixer sget Master | grep "\[on\]" )
-	if [[ ! -z $NOTMUTED ]] ; then
-		VOL=$(awk -F"[][]" '/dB/ { print $2 }' <(amixer sget Master) | sed 's/%//g')
+  VOL=$(pulsevolume | awk '{print $2}' | tr -d "%")
+	if [ ! $VOL = "mute" ]; then
 		if [ $VOL -ge 85 ] ; then
 			echo -e "\uf028 ${VOL}%"
 		elif [ $VOL -ge 50 ] ; then
@@ -75,7 +75,7 @@ Sound(){
 			echo -e "\uf026 ${VOL}%"
 		fi
 	else
-		echo -e "\uf026 M"
+		echo -e "\uf026 $VOL"
 	fi
 }
 Term() {

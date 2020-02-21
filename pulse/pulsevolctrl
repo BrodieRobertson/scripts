@@ -9,5 +9,9 @@ elif [ $1 = "output-mute" ]; then
   pactl set-sink-mute "$2" toggle
 fi
 
-#pkill -SIGRTMIN+1 i3blocks
-polybar-msg hook volume 1
+# Updates volume in bar
+if pgrep "polybar"; then
+  #pkill -SIGRTMIN+1 i3blocks
+  polybar-msg hook volume 1
+fi
+

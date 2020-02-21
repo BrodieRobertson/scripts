@@ -1,15 +1,14 @@
 #!/bin/sh
+# Provides a simple interface to open common applications to use tabbing with
 
-windowid=$(xdo id)
+windowid=$(xdotool getwindowfocus)
 
 newwindow() {
   command=$(dmenu < ~/.config/tabdmenu/apps) || exit
-
-  if echo $command | grep -Eq 'kitty|st'; then
-    $command &
-  else
-    $TERMINAL -e $command &
-  fi
+  case "$command" in
+    kitty|st) $command & ;;
+    *) $TERMINAL -e $command & ;;
+  esac
 
   sleep 0.1
   newwindowid=$(xdotool getwindowfocus)

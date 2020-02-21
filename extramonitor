@@ -1,8 +1,8 @@
 #!/bin/sh
-# Toggle on/off an external HDMI monitor, does not support audio over HDMI as it's pretending that it's DVI
+# Toggle on/off an external monitor, HDMI does not support audio over HDMI as it's pretending that it's DVI
 
-intern="eDP-1"
-extern="HDMI-1"
+intern="$2"
+extern="$3"
 
 case "$1" in
     "disconnect") xrandr --output "$extern" --off --output "$intern" --auto ;;

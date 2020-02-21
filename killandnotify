@@ -1,2 +1,9 @@
 #!/bin/sh
-pgrep "$1" | xargs -I % kill -9 % && notify-send "$1" "$2"
+# Kills an application and sends a notification that it's been killed
+
+id=$(pgrep $1)
+
+if [ ! -z $id ]; then
+  kill -9 $id && notify-send "$1" "$2"
+fi
+

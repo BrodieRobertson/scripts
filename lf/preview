@@ -1,4 +1,5 @@
 #!/bin/sh
+# Preview script built for use with lf and fzf
 LINES=30
 case "$1" in
     *.png|*.jpg|*.jpeg|*.mkv|*.mp4) mediainfo "$1";;

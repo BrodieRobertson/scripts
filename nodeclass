@@ -1,4 +1,6 @@
 #!/bin/sh
+# Gets the window class of a window
+
 id=$1
 if [ -z $id ]; then
   echo ""

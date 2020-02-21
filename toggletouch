@@ -1,4 +1,5 @@
 #!/bin/sh
+# Script to toggle my laptops touchpad
 ID="$(xinput list | grep -Eo 'Touchpad.*id=[0-9]*' | grep -Eo '[0-9]*')"
 STATUS="$(echo "$ID" | xargs -I % xinput --list-props % | grep 'Device Enabled' | grep -Eo ':.*[0|1]' | grep -Eo '[0|1]')"
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 # Changes the volume level of an audio track
-# Signals an update in i3blocks for the i3volume block
+# Signals an the status bar to update
 
 if [ $1 = "All" ]; then
     if [ $2 = "mute" ]; then

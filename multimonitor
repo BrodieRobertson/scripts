@@ -1,2 +1,3 @@
 #!/bin/sh
-echo -e "disconnect\nextra\nduplicate" | dmenu -i -p "Monitor Configuration" -fn "JetBrains Mono Medium-10" | xargs -I % extramonitor "%"
+# Wrapper script for extramonitor
+echo -e "disconnect\nextra\nduplicate" | dmenu -i -p "Monitor Configuration" -fn "JetBrains Mono Medium-10" | xargs -I % extramonitor "%" "$1" "$2"

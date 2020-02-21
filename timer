@@ -1,5 +1,0 @@
-#!/bin/sh
-time=$(echo "" | dmenu -p "Time")
-message=$(echo "" | dmenu -p "Message")
-
-$TERMINAL -e termdown "$time" && notify-send "Timer" "$message"

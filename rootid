@@ -1,2 +1,3 @@
 #!/bin/sh
+# Outputs the id of the root window
 xwininfo -root | awk '/Window id:/{print $4}'

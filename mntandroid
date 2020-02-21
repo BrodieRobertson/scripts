@@ -1,9 +1,16 @@
 #!/bin/sh
-# Mount and unmount an android device to the ~/cell folder
+# Mount and unmount an android device to the $HOME/cell folder
 
-if [ $(ls ~/cell | wc -l) -gt 0 ]; then
-    fusermount -u ~/cell/ && notify-send "Android Mount" "Device Unmounted"
+dir=$HOME/cell
+
+# Make the cell directory if it doesn't exist
+if [ -d $dir ]; then
+  mkdir $dir
+fi
+
+if [ $(ls $dir | wc -l) -gt 0 ]; then
+    fusermount -u $dir && notify-send "Android Mount" "Device Unmounted"
 else
-    simple-mtpfs --device 1 ~/cell/ && notify-send "Android Mount" "Device Mounted in ~/cell"
+    simple-mtpfs --device 1 $dir && notify-send "Android Mount" "Device Mounted in $HOME/cell"
 fi
 

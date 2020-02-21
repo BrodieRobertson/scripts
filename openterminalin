@@ -1,4 +1,5 @@
 #!/bin/sh
+# Cd into a directory selected in dmenufm
 
 dfm
 dir="$(cat ~/.config/dmenufm/dmenufm_lastpath)"

@@ -1,4 +1,6 @@
 #!/bin/sh
+# Simple script to output battery level formatted for polybar
+
 bat_number=0
 acpi=$(acpi -b 2>/dev/null| grep "Battery $bat_number")
 ac_adapt=$(acpi -a | awk '{print $2}')

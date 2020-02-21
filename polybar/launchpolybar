@@ -1,4 +1,5 @@
 #!/bin/bash
+# Launches an instance of polybar
 
 # Terminate already running bar instances
 killall -q polybar

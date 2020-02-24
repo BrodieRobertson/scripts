@@ -38,20 +38,28 @@ function get_class {
 #
 
 cmd=$1
-if [ $cmd = "add" ]; then
-  tabbedid=$(bspc query -N -n $2)
-
-  if [ -z $tabbedid ] || [ "$(get_class "$tabbedid")" != "tabbed" ]; then
-    tabbed -c &
-    sleep 0.1
-    tabbedid=$(xdotool search --class tabbed | tail -n1)
-  fi
-fi
 
 case $cmd in
 	add)
-		wid=$3
-		xdotool windowreparent $wid $tabbedid
+	  wid=$3
+    tabbedid=$(bspc query -N -n $2)
+
+    if [ -z $tabbedid ] || [ "$(get_class "$tabbedid")" != "tabbed" ]; then
+      tabbed -c &
+      bspc subscribe node_add | while read add
+      do
+        id=$(echo "$add" | awk '{print $5}')
+        class=$(get_class $id)
+        if [ $class = "tabbed" ]; then
+          tabbedid=$id
+	  	    xdotool windowreparent $wid $tabbedid
+          exit 0
+        fi
+      done
+	  	  xdotool windowreparent $wid $tabbedid
+    else
+	  	xdotool windowreparent $wid $tabbedid
+    fi
 		;;
 	remove)
 		wid=$2

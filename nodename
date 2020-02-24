@@ -1,0 +1,9 @@
+#!/bin/sh
+# Gets the window class of a window
+
+id=$1
+if [ -z $id ]; then
+  echo ""
+else
+  xprop -id $id | grep ^WM_NAME\(UTF8_STRING\) | awk '{print $3}' | tr -d '"'
+fi

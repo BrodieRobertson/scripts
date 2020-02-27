@@ -5,7 +5,7 @@ notify-send "Torrents" "$(echo "$torrents" | sed '1d' | awk '{printf $2 " " $3 "
 
 # Updates the bar torrents module
 if pgrep "polybar"; then
-  polybar-msg -p $(pidof "polybar") hook torrents 1
+  polybar-msg -p "$(pidof "polybar")" hook torrents 1
 fi
 
 #awk '{print $2 "\t" $3 "\t"}{for(i = 9; i < 20; i++) printf $i}'

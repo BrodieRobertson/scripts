@@ -2,8 +2,8 @@
 # General handler for compiling files
 
 file=$(readlink -f "$1")
-base=$(echo $file | sed 's/\..*//')
-bang=$(sed -n "1p" $file)
+base=$(echo "$file" | sed 's/\..*//')
+#bang=$(sed -n "1p" "$file")
 
 case "$1" in
     *".md") pandoc "$file" -o "$base".pdf ;;

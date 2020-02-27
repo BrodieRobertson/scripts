@@ -6,8 +6,8 @@ url=$(sort ~/.config/search/search | sed 's/:.*//' | dmenu -i -p "Search Engine"
 search=$(sort ~/.config/search/search_history | dmenu -i -p "Search")
 
 # Echo to history file
-if [ -z "$(cat ~/.config/search/search_history | grep "$search")" ]; then
-    if [ $(cat ~/.config/search/search_history | wc -l) -gt 500 ]; then
+if [ ! "$(grep -q "$search" < ~/.config/search/search_history)" ]; then
+    if [ "$(wc -l < ~/.config/search/search_history)" -gt 500 ]; then
         sed -i "1s/^/$search\n/;$ d" ~/.config/search/search_history
     else
         echo "$search" >> ~/.config/search/search_history
@@ -15,6 +15,6 @@ if [ -z "$(cat ~/.config/search/search_history | grep "$search")" ]; then
 fi
 
 # Open browser if search query provided
-if [ ! -z "$search" -a "$search" != "" ]; then
+if [ -n "$search" ] && [ "$search" != "" ]; then
     opnbrow "$1" "$url$(encode "$search")"
 fi

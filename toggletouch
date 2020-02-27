@@ -1,10 +1,10 @@
 #!/bin/sh
 # Script to toggle my laptops touchpad
-ID="$(xinput list | grep -Eo 'Touchpad.*id=[0-9]*' | grep -Eo '[0-9]*')"
-STATUS="$(echo "$ID" | xargs -I % xinput --list-props % | grep 'Device Enabled' | grep -Eo ':.*[0|1]' | grep -Eo '[0|1]')"
+id="$(xinput list | grep -Eo 'Touchpad.*id=[0-9]*' | grep -Eo '[0-9]*')"
+mode="$(echo "$id" | xargs -I % xinput --list-props % | grep 'Device Enabled' | grep -Eo ':.*[0|1]' | grep -Eo '[0|1]')"
 
-if [ $STATUS -eq "1" ]; then
-  xinput set-prop $ID "Device Enabled" 0 && notify-send "Touchpad" "Touchpad has been disabled"
+if [ "$mode" -eq "1" ]; then
+  xinput set-prop "$id" "Device Enabled" 0 && notify-send "Touchpad" "Touchpad has been disabled"
 else
-  xinput set-prop $ID "Device Enabled" 1 && notify-send "Touchpad" "Touchpad has been enabled"
+  xinput set-prop "$id" "Device Enabled" 1 && notify-send "Touchpad" "Touchpad has been enabled"
 fi

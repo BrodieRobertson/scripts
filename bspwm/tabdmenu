@@ -9,15 +9,15 @@ newwindow() {
   # Bspwm only
   case "$command" in
     kitty|st) $command & ;;
-    *) $TERMINAL -e $command & ;;
+    *) $TERMINAL -e "$command" & ;;
   esac
-  bspc subscribe node_add | while read add
+  bspc subscribe node_add | while read -r add
   do
     id=$(echo "$add" | awk '{print $5}')
-    name=$(nodename $id)
-     if [ $name = $command ]; then
+    name=$(nodename "$id")
+     if [ "$name" = "$command" ]; then
       newwindowid=$id
-      xdotool windowreparent $newwindowid $1
+      xdotool windowreparent "$newwindowid" "$1"
       exit 0
      fi
   done
@@ -40,18 +40,18 @@ if [ "$(nodeclass "$windowid")" != "tabbed" ]; then
 
   # Bspwm only
   tabbed -c &
-  bspc subscribe node_add | while read add
+  bspc subscribe node_add | while read -r add
   do
     id=$(echo "$add" | awk '{print $5}')
-    class=$(nodeclass $id)
-    if [ $class = "tabbed" ]; then
+    class=$(nodeclass "$id")
+    if [ "$class" = "tabbed" ]; then
       tabbedid=$id
-      xdotool windowreparent $windowid $tabbedid
-      newwindow $tabbedid
+      xdotool windowreparent "$windowid" "$tabbedid"
+      newwindow "$tabbedid"
       exit 0
     fi
   done
 else
-  newwindow $windowid
+  newwindow "$windowid"
 fi
 

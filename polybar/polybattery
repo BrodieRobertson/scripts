@@ -24,16 +24,16 @@ else
   symbol='🔋 '
 fi
 
-echo -n "$symbol"
+printf "%s" "$symbol"
 
-if [ $percent -lt 20 ]; then
-  echo -n "%{F#ed0b0b}"
-elif [ $percent -lt 50 ]; then
-  echo -n "%{F#f2e421}";
+if [ "$percent" -lt 20 ]; then
+  printf "%%{F#ed0b0b}"
+elif [ "$percent" -lt 50 ]; then
+  printf "%%{F#f2e421}";
 fi
 
-echo -n "$percent%"
+printf "$percent%%"
 
-if [ $mode = "Discharging," -o $mode = "Charging," -o $ac_adapt = "off-line," ]; then
+if [ "$mode" = "Discharging," ] || [ "$mode" = "Charging," ] || [ "$ac_adapt" = "off-line," ]; then
   echo " ($remaining)"
 fi

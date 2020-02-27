@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # i3block for the displaying the wifi connectivity level
 # If the wifi interface exists but no connection is active, "down" shall be displayed.
 

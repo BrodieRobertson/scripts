@@ -4,11 +4,11 @@
 printf "File Name: "
 
 # Set a name for the script
-while [ -z $ans ];
+while [ -z "$ans" ];
 do
-  read ans
+  read -r ans
 
-  if [ -z $ans ]; then
+  if [ -z "$ans" ]; then
     printf "File Name: "
   fi
 done
@@ -17,10 +17,10 @@ file=$HOME/scripts/$ans
 
 if [ -d "$HOME/scripts" ]; then
   if [ -e "$HOME/scripts/$ans" ]; then
-    $EDITOR $file
+    $EDITOR "$file"
   else
-    echo "#!/bin/sh" >> $file
-    chmod +x $file
-    $EDITOR $file
+    echo "#!/bin/sh" >> "$file"
+    chmod +x "$file"
+    $EDITOR "$file"
   fi
 fi

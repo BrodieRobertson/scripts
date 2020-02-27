@@ -3,17 +3,17 @@
 
 url=$(dragon-drag-and-drop -t -x)
 
-if [ ! -z $url ]; then
+if [ -n "$url" ]; then
   printf "File Name: "
   name=""
   while [ -z $name ] || [ -e $name ]
   do
-    read name
-    if [ -e $name ]; then
+    read -r name
+    if [ -e "$name" ]; then
       printf "File already exists, overwrite (y|n): "
-      read ans
+      read -r ans
 
-      if [ $ans = "y" ]; then
+      if [ "$ans" = "y" ]; then
         break
       else
         printf "File Name: "
@@ -22,7 +22,7 @@ if [ ! -z $url ]; then
   done
 
   # Download the file with curl
-  [ ! -z $name ] && curl -o "$name" $url || exit 1
+  [ -n "$name" ] && curl -o "$name" "$url" || exit 1
 else
   exit 1
 fi

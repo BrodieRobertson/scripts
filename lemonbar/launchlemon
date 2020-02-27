@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Launches an instance of lemonbar
 killall -q lemonbar
 killall -q lemonconfig

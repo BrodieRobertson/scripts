@@ -1,3 +1,3 @@
 #!/bin/sh
 # Script to generate a templte react class
-echo -e "import React from \"react\";\n\nconst $1 = () => {\n\treturn <div></div>;\n};\n\nexport default $1;" > $(pwd)/$2/$1.js
+printf "import React from \"react\";\n\nconst $1 = () => {\n\treturn <div></div>;\n};\n\nexport default $1;" > $(pwd)/$2/$1.js

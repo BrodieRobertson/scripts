@@ -3,7 +3,7 @@
 
 id=$(pgrep $1)
 
-if [ ! -z $id ]; then
-  kill -9 $id && notify-send "$1" "$2"
+if [ -n "$id" ]; then
+  kill -9 "$id" && notify-send "$1" "$2"
 fi
 

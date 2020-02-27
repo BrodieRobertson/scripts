@@ -3,7 +3,7 @@
 
 libre() {
   pdffile=$(echo "$1" | grep -o ".*\.")"pdf"
-  libreoffice --convert-to pdf $1 --headless >/dev/null 2>&1 && $READER $pdffile && rm $pdffile
+  libreoffice --convert-to pdf "$1" --headless >/dev/null 2>&1 && "$READER" "$pdffile" && rm "$pdffile"
 }
 case $1 in
   *.odt) libre "$1";;

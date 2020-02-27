@@ -2,11 +2,11 @@
 # Changes the volume level of an audio track
 # Signals an the status bar to update
 
-if [ $1 = "All" ]; then
-    if [ $2 = "mute" ]; then
+if [ "$1" = "All" ]; then
+    if [ "$2" = "mute" ]; then
         volume="$(i3volume)"
 
-        if [ -z $(echo $volume | grep "mute") ]; then
+        if [ ! "$(echo "$volume" | grep -q "mute")" ]; then
             amixer set "Master" "mute"
             amixer set "Headphone" "mute"
             amixer set "Speaker" "mute"

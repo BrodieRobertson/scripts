@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-pape=$1
+pape="$1"
 
 # Get the width of the wallpaper
 height=$(magick convert "$pape" -format "%h" info:)

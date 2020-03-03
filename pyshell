@@ -1,2 +1,2 @@
 #!/bin/sh
-echo "" | dmenu -i -p "Python" | xargs -0 -I % python -c "import random;print(%)" | xargs -I % notify-send "Result" "%"
+printf '' | dmenu -i -p 'Python' | xargs -I % python -c "import random;print(%)" | xargs -I % notify-send 'Result' "%"

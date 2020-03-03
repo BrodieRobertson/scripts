@@ -1,26 +1,21 @@
 #!/bin/sh
 # Simple script to generate a script file in my scripts directory
 
-printf "File Name: "
-
 # Set a name for the script
+ans=
 while [ -z "$ans" ];
 do
-  read -r ans
-
-  if [ -z "$ans" ]; then
     printf "File Name: "
-  fi
+    read -r ans
 done
 
-file=$HOME/scripts/$ans
+file="$HOME/scripts/$ans"
 
-if [ -d "$HOME/scripts" ]; then
-  if [ -e "$HOME/scripts/$ans" ]; then
+[ -d "$HOME/scripts" ] && exit
+if [ -e "$HOME/scripts/$ans" ]; then
     $EDITOR "$file"
-  else
-    echo "#!/bin/sh" >> "$file"
+else
+    echo '#!/bin/sh' >> "$file"
     chmod +x "$file"
     $EDITOR "$file"
-  fi
 fi

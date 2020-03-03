@@ -7,9 +7,9 @@ menu() {
 }
 
 case $1 in
-    full) maim "$output" || exit;;
-    select) maim -s "$output" || exit ;;
-    fulltime) menu && maim "$output" || exit ;;
+          full) maim "$output" || exit;;
+        select) maim -s "$output" || exit ;;
+      fulltime) menu && maim "$output" || exit ;;
     selecttime) menu && maim -s "$output" || exit ;;
 esac
 

@@ -9,7 +9,7 @@ do
     read -r ans
 done
 
-file="$HOME/scripts/$ans"
+file=$HOME/scripts/$ans
 
 [ -d "$HOME/scripts" ] && exit
 if [ -e "$HOME/scripts/$ans" ]; then

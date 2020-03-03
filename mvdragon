@@ -1,8 +1,8 @@
 #!/bin/sh
 
-while IFS= read -r line; do
-  path="${line##file://}"
-  name="${path##*/}"
+while IFS= read line; do
+  path=${line##file://}
+  name=${path##*/}
   mv "$path" "$name"
 done << EOF
 $(dragon-drag-and-drop -t -x)

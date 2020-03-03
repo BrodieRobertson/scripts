@@ -1,7 +1,7 @@
 #!/bin/sh
 # Mount and unmount an android device to the $HOME/cell folder
 
-dir=$HOME/cell; mkdir -p "$dir"
+mkdir -p "$HOME/cell"
 
 if [ "$(find "$dir" -maxdepth 1 | wc -l)" -gt 1 ]; then
     fusermount -u "$dir" && notify-send "Android Mount" "Device Unmounted"

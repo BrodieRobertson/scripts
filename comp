@@ -1,8 +1,8 @@
 #!/bin/sh
 # General handler for compiling files
 
-file="$(readlink -f "$1")"
-base="${file%.*}"
+file=$(readlink -f "$1")
+base=${file%.*}
 #bang=$(sed -n "1p" "$file")
 
 case "$1" in

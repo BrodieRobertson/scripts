@@ -2,17 +2,17 @@
 # Handler script for opening a link in a browser
 
 handle_default() {
-    if [ ! -z "$1" ]; then
+    if command -v "$1" >/dev/null; then
         $1 "$2"
-    elif [ ! -z "$BROWSER" ]; then
-        $BROWSER $2
+    elif [ -n "$BROWSER" ]; then
+        $BROWSER "$2"
     fi
 }
 
-if [ "$2" ]; then
-    # Special handling for browsers that support tabbing
-    case "$1" in
-        "firefox") firefox --new-tab "$2" ;;
-        *) handle_default ;;
-    esac
-fi
+[ "$2" ] || exit
+
+# Special handling for browsers that support tabbing
+case $1 in
+    firefox) firefox --new-tab "$2" ;;
+    *) handle_default "$@" ;;
+esac

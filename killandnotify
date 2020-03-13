@@ -1,9 +1,4 @@
 #!/bin/sh
 # Kills an application and sends a notification that it's been killed
 
-id=$(pgrep $1)
-
-if [ -n "$id" ]; then
-  kill -9 "$id" && notify-send "$1" "$2"
-fi
-
+killall $1 && notify-send "$1" "$2"

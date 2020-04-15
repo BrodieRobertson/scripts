@@ -10,8 +10,6 @@ elif [ "$1" = "output-mute" ]; then
 fi
 
 # Updates volume in bar
-if pgrep "polybar"; then
-  #pkill -SIGRTMIN+1 i3blocks
-  polybar-msg hook volume 1
-fi
+polybar-msg hook volume 1
+#pkill -SIGRTMIN+1 i3blocks
 

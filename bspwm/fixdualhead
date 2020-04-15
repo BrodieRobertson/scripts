@@ -1,0 +1,45 @@
+#!/bin/sh
+
+HelpPage() {
+  echo "Fix Dual Head Help Page
+    -p <name> name of the primary monitor
+    -pd <desktop_names> space seperated list of desktop names to be put on the primary monitor
+    -s <name> name of the secondary monitor
+    -sd <dsktop_names> space seperated list of desktop names to be put on the secondary monitor
+    -h show this help page"
+}
+
+for Value in "$@"
+do
+  # Handle options
+  case "$Value" in
+    # Options requring arguments
+    -p|-pd|-s|-sd) OptionSet=$Value ;;
+    -h|--help) HelpPage; exit 0;;
+  esac
+
+  # Handle arguments
+  if [ -n "$OptionSet" ]; then
+    case "$OptionSet" in
+      -p) PrimaryMonitor=$Value ;;
+      -pd) PrimaryDesktops=$Value ;;
+      -s) SecondaryMonitor=$Value ;;
+      -sd) SecondaryDesktops=$Value ;;
+      *) Err 1 "Invalid option set" ;;
+    esac
+  fi
+done
+
+# Add new desktops to secondary monitor
+for Value in $SecondaryDesktops
+do
+  bspc monitor "$SecondaryMonitor" -a "$Value"
+done
+
+# Move primary desktops back to primary monitor
+for Value in $PrimaryDesktops
+do
+  bspc desktop "$Value" -m "$PrimaryMonitor"
+done
+
+bspc desktop "Desktop" -r

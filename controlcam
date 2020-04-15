@@ -1,0 +1,22 @@
+#!/bin/sh
+MaxWidth=1920
+MaxHeight=1080
+MinWidth=270
+MinHeight=480
+
+fullscreen() {
+  xdo move -x 0 -y 0 $id
+  xdo resize -w $MaxWidth -h $MaxHeight $id
+}
+
+move() {
+  xdo resize -w 480 -h 270 $id
+  xdo move -x $1 -y $2 $id
+}
+
+id=$(xdotool search --pid "$(pidof guvcview)")
+
+case "$1" in
+  fullscreen) fullscreen ;;
+  *) move $1 $2;;
+esac

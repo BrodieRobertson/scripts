@@ -1,0 +1,2 @@
+#!/bin/sh
+covid19-cli -c Australia --clean

@@ -3,15 +3,22 @@
 
 device=$(v4l2-ctl --list-devices | grep "C920" -A 1 | grep "/dev/video." -o)
 
-if [ ! -z $device ]; then
-  v4l2-ctl -d $device --set-ctrl=focus_auto=0
-  v4l2-ctl -d $device --set-ctrl=exposure_auto=1
-  v4l2-ctl -d $device --set-ctrl=focus_absolute=0
-  v4l2-ctl -d $device --set-ctrl=exposure_absolute=400
-  v4l2-ctl -d $device --set-ctrl=brightness=120
-  v4l2-ctl -d $device --set-ctrl=saturation=170
-  v4l2-ctl -d $device --set-ctrl=contrast=128
-  v4l2-ctl -d $device --set-ctrl=sharpness=170
+v4l2-ctl -d $device --set-ctrl=focus_auto=0
+v4l2-ctl -d $device --set-ctrl=exposure_auto=1
+v4l2-ctl -d $device --set-ctrl=white_balance_temperature_auto=0
+v4l2-ctl -d $device --set-ctrl=focus_absolute=40
+v4l2-ctl -d $device --set-ctrl=exposure_absolute=300
+v4l2-ctl -d $device --set-ctrl=saturation=128
+v4l2-ctl -d $device --set-ctrl=contrast=128
+v4l2-ctl -d $device --set-ctrl=sharpness=128
+v4l2-ctl -d $device --set-ctrl=white_balance_temperature=4800
+
+if [ "$1" = "night" ]; then
+  if [ ! -z $device ]; then
+    v4l2-ctl -d $device --set-ctrl=brightness=140
+  fi
+else
+  if [ ! -z $device ]; then
+    v4l2-ctl -d $device --set-ctrl=brightness=140
+  fi
 fi
-
-

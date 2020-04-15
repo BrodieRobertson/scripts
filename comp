@@ -3,10 +3,20 @@
 
 file=$(readlink -f "$1")
 base=$(echo "$file" | sed 's/\..*//')
-#bang=$(sed -n "1p" "$file")
+
+handlebang() {
+  bang=$(head -n 1 "$file")
+  case "$bang" in
+    *!/bin/sh|*!/bin/bash|*!/bin/zsh) "$file" ;;
+    *!/bin/perl) perl "$file" ;;
+    *!/bin/python) python "$file" ;;
+    *) echo "Can't compile" ;;
+  esac
+}
 
 case "$1" in
-    *".md") pandoc --filter pandoc-crossref "$file" -o "$base".pdf ;;
-    *".php") php -S "$file" ;;
-    *) echo "Can't compile" ;;
+    *.md) pandoc --filter pandoc-crossref "$file" -o "$base".pdf ;;
+    *.py) python "$file" ;;
+    *.perl) perl "$file" ;;
+    *) handlebang ;;
 esac

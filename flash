@@ -1,0 +1,228 @@
+#!/usr/bin/env bash
+#==============================================================#
+#
+# AUTHOR:
+#     Bryan Jenks
+#         - www.bryanjenks.xyz
+#         - https://github.com/tallguyjenks/flash.sh
+#
+# SOURCE:
+#     This file is based off of the one presented in this YouTube Video by nixcasts:
+#         - https://www.youtube.com/watch?v=lX8jqo70r1I
+#
+# PURPOSE:
+#     To have a command line flash card tool with minimal code, plain text input and output
+#
+# VISION:
+#     The goal i have for this script is a basic level emulation of ANKI to where i have a way to
+#     keep track of a score for each item in each selected deck so that it can pick from a selection
+#     of the lowest scoring items and shuf them to the user for reenforcement of active recall.
+#
+# DEPENDENCIES:
+#     fzf - https://github.com/junegunn/fzf
+#     bat - https://github.com/sharkdp/bat
+#==============================================================#
+
+# USER CUSTOMIZABLE VARIABLES
+    CARD_POOL_SIZE=10 # How large the pool size is for shuf to draw from
+    SEARCH_DEPTH=999  # How many levels to recursively search for .csv's in .local/share/flash
+
+# ANSI FOREGROUND ESCAPE COLORS
+    RED='\033[0;31m'
+    LRED='\033[1;31m'
+    YELLOW='\033[1;33m'
+    GREEN='\033[0;32m'
+    LGREEN='\033[1;32m'
+    ORANGE='\033[0;33m'
+    LGREY='\033[0;37m'
+    WHITE='\033[1;37m'
+    NC='\033[0m' # No Color
+# ANSI BACKGROUND ESCAPE COLORS
+    WHITEBG='\033[1;47m'
+# FONT FORMAT EXCAPE CODES
+    BOLD='\e[1m'
+
+# Remember User's Starting Directory
+    PWD="$(pwd)"
+# Where Decks Are Located
+    DIR="$HOME/.local/share/flash"
+# Where the example deck with be placed and named
+    EXAMPLE_DECK="$DIR/deck.csv"
+# Track High score
+    HIGH_SCORE="$DIR/.highscore"
+# Track number of cards reviewed per session
+    REVIEW_LOG="$DIR/.reviews"
+# Iterator for Count of cards reveiwed
+    COUNTER=0
+# Success message of setup process
+DIR_MADE_MSG="
+Your ${LRED}~/.local/share/flash${NC} directory has been made and
+your ${ORANGE}deck.csv${NC} file is ready for you to enter your flashcard data
+"
+# User has .local/share directory but no decks inside
+NO_DECKS="
+No decks were found, please make a new deck
+using ${ORANGE}:${NC} as a delimiter in a ${ORANGE}.csv${NC} file in
+the ${LRED}.local/share/flash${NC} directory.
+
+An example of a card:
+${GREEN}Math:What is the square root of 4?:2:0${NC}
+"
+# The example flashcard deck to be made
+DECK_TEMPLATE="History:When was the declaration of independence signed?:1776:0
+Math:What is the square root of 4?:2:4
+Science:What is the charge of a proton?:Positive:2
+Philosophy:What was socrates known as?:The Gadfly of Athens:0
+Programming:What is the typical starting value of an array?:0:5
+History:What did Abraham Lincoln Typically Keep In his hat?:Mail:0
+Math:what is the first 2 decimal places of PI:3.14:4
+Science:What is the charge of an electron?:Negative:3
+Programming:What does OOP stand for?:Object Oriented Programming:2
+History:What did socrates drink to commit suicide?:Hemlock Tea:2
+Math:What is the equation for a slope of a line?:y=mx+b:4
+Science:What is the charge of a neutron?:Neutral:1
+Programming:What is Vim?:God's Text Editor:999
+History:What were the british known buy during the american revolution?:The redcoats:1
+Math:What is the value of this equation - log10(100)?:2:0
+Science:What are protons/neutrons/electrons made of?:quarks:5
+Programming:What does RAM stand for?:Random Access Memory:1
+History:What was the year 2000 also known as?:Y2K:0
+Math:What is the formula for mean?:Sum/count:4
+Science:What is cold?:The absense of heat:3
+Programming:What languages are the worst?:Proprietary:999
+History:When did man land on the moon?:1969:4
+Math:10^3=?:1000:1
+Science:The _____ ______ Project mapped all of man's genes.:Human Genome:3
+Programming:What is the best computer to program on?:Thinkpad:999
+History:When was flash.sh created?:April 2020:999
+Math:What do you call a number only divisible by itself and 1?:Prime:0
+Science:What is the distance between the Earth and Sol called?:An Astronomical Unit (AU):1
+Programming:Best operating system?:Arch, because BTW i run Arch:999"
+
+# Test if .local/share exists and wether to offer setup process
+if [ ! -d $DIR ];then
+    echo -e "No ${LRED}.local/share/flash${NC} directory, make it? ${LGREEN}Y${NC}/${LRED}N${NC}"
+    read RESPONSE
+        case "$RESPONSE" in
+            [QqNn]) exit ;;
+            [Yy]) mkdir "$DIR" && touch {$EXAMPLE_DECK,$HIGH_SCORE,$REVIEW_LOG} && echo "$DECK_TEMPLATE" >> $EXAMPLE_DECK && echo -e "$DIR_MADE_MSG" && exit;;
+            *) echo -e "invalid choice, please select either ${LGREEN}y${NC} or ${LRED}n${NC}" && exit ;;
+        esac
+fi
+
+# go to the flashcard decks
+    cd "$DIR"
+
+# If there are no flashcard decks available return user to starting location
+if [ "$(find -maxdepth 999 -iname "*.csv" | wc -l)" = 0 ]; then
+    echo -e "$NO_DECKS" && cd "$PWD" && exit
+fi
+
+# if highscore file was removed, remake it.
+if [ ! -e "$HIGH_SCORE" ]; then
+    touch "$HIGH_SCORE"
+fi
+
+# if reviewed file was removed, remake it.
+if [ ! -e "$REVIEW_LOG" ]; then
+    touch "$REVIEW_LOG"
+fi
+
+# Show pretty FZF preview of decks using BAT
+    DECK="$(find -maxdepth $SEARCH_DEPTH -iname '*.csv' | fzf --preview='bat --theme="Solarized (dark)" --style=numbers --color=always {} | head -500')"
+
+# If no deck is selected in fzf menu, return user to start location and exit
+if [ -z $DECK ]; then
+    cd "$PWD" && exit
+fi
+
+main(){
+    IFS=$':'; read -a q <<<$(sort "$DECK" -n --field-separator=: --key=4 | head -n "$CARD_POOL_SIZE"| shuf -n 1)
+    clear
+    echo -e "${WHITEBG}          Flash.sh - Flash Cards In Your Terminal          ${NC}"
+    echo -e "${ORANGE}${BOLD}Cards Reviewed:${BOLD}${NC}\t$COUNTER"
+    echo -e "    ${ORANGE}${BOLD}High Score:${BOLD}${NC}\t$(cat $HIGH_SCORE)"
+    echo -e "    ${ORANGE}${BOLD}Avg review:${BOLD}${NC}\t$(awk '{ sum += $7; n++ } END { if (n > 0) print sum / n; }' $REVIEW_LOG)"
+    echo -e ""
+    echo -e "${LGREY}Category:${NC}
+        ${q[0]}"
+    echo -e "${LGREY}Question:${NC}
+        ${q[1]}"
+    echo -e ""
+    read -sn 1 NEXT
+    if [ "$NEXT" = q ] || [ "$NEXT" = Q ]; then
+        add_usage_entry && cd "$PWD" && exit
+    fi
+    echo -e "${LGREY}Answer:${NC}
+        ${q[2]}"
+    echo -e ""
+    echo -e "${WHITEBG}${WHITE}===========================================================${NC}"
+    echo -e ""
+    echo -e "${LGREY}How Difficult Was This Question?${NC}"
+    echo -e ""
+    echo -e "${LRED}Hard${NC} [1]   ${RED}Difficult${NC} [2]   ${YELLOW}Normal${NC} [3]   ${GREEN}Mild${NC} [4]   ${LGREEN}Easy${NC} [5]"
+    echo -e ""
+    read -sn 1 DIFFICULTY_SCORE
+    if [ "$DIFFICULTY_SCORE" = q ] || [ "$DIFFICULTY_SCORE" = Q ]; then
+        add_usage_entry && cd "$PWD" && exit
+    fi
+    clear
+
+    COUNTER="$(($COUNTER+1))" # Increment count for above test and card review count increment
+
+    if [ "${q[3]}" = 0 ]; then
+        NEW_ITEM_SCORE=0
+        case "$DIFFICULTY_SCORE" in
+            [123]) NEW_ITEM_SCORE=0 ;;#HARD DIFFICULTY & NORMAL
+            4) NEW_ITEM_SCORE=1 ;;#MILD
+            5) NEW_ITEM_SCORE=2 ;;#EASY
+            *) NEW_ITEM_SCORE=0 ;;#INVALID
+        esac
+
+    elif [ "${q[3]}" = 1 ]; then
+        case "$DIFFICULTY_SCORE" in
+            1) NEW_ITEM_SCORE=0 ;;#HARD
+            2) NEW_ITEM_SCORE=0 ;;#DIFFICULT
+            3) NEW_ITEM_SCORE=1 ;;#NORMAL
+            4) NEW_ITEM_SCORE=2 ;;#MILD
+            5) NEW_ITEM_SCORE=3 ;;#EASY
+            *) NEW_ITEM_SCORE=1 ;;#INVALID
+        esac
+    else
+        case "$DIFFICULTY_SCORE" in
+            1) NEW_ITEM_SCORE="$((${q[3]}-2))" ;;#HARD
+            2) NEW_ITEM_SCORE="$((${q[3]}-1))" ;;#DIFFICULTY
+            3) NEW_ITEM_SCORE="${q[3]}" ;;#NORMAL
+            4) NEW_ITEM_SCORE="$((${q[3]}+1))" ;;#MILD
+            5) NEW_ITEM_SCORE="$((${q[3]}+2))" ;;#EASY
+            *) NEW_ITEM_SCORE="${q[3]}" ;;#INVALID
+        esac
+    fi
+
+    # Update item score for each flashcard item
+    sed -i "s/${q[0]}:${q[1]}:${q[2]}:${q[3]}/${q[0]}:${q[1]}:${q[2]}:$NEW_ITEM_SCORE/g" "$DECK"
+    # Update highscore if new highscore is achieved
+    if [ -z "$(cat $HIGH_SCORE)" ]; then
+        echo "$COUNTER" > "$HIGH_SCORE"
+    fi
+
+    # If Cards Reviewed > Current High Score, Update
+    if [ "$COUNTER" -gt "$(cat $HIGH_SCORE)" ]; then
+        echo "$COUNTER" > "$HIGH_SCORE"
+    fi
+
+}
+
+add_usage_entry(){
+    if [ ! "$COUNTER" = 0 ]; then
+        # Create a New Entry
+        TIME_STAMP="$(date --rfc-3339=seconds)"
+        REVIEWED_DECK="$(echo $EXAMPLE_DECK | awk -F/ '{print $7}')"
+        printf -v ENTRY "TimeStamp: %s Deck: %s cardsReviewed: %s" "$TIME_STAMP" "$REVIEWED_DECK" "$COUNTER"
+        echo "$ENTRY" >> "$REVIEW_LOG"
+    fi
+}
+
+while true; do
+        main
+done

@@ -1,0 +1,8 @@
+#!/bin/sh
+id=$(xdo id)
+echo $id > .cache/cam_indicator
+bspc node -g sticky -t floating
+
+while true;
+	do sleep 1;
+done

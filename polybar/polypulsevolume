@@ -1,6 +1,6 @@
 #!/bin/sh
 # Outputs the pulse volume level formatted to be shown in polybar
-device=$(pulsedevices | grep "pci-0000_00" -A 2)
+device=$(pulsedevices | grep "pci-0000_0b" -A 2)
 mute=$(echo "$device" | grep "Mute" | awk '{ print $2 }')
 vol=$(echo "$device" | grep "front-left" | awk '{ print $5 }')
 

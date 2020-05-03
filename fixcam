@@ -12,6 +12,7 @@ v4l2-ctl -d $device --set-ctrl=saturation=128
 v4l2-ctl -d $device --set-ctrl=contrast=128
 v4l2-ctl -d $device --set-ctrl=sharpness=128
 v4l2-ctl -d $device --set-ctrl=white_balance_temperature=4800
+v4l2-ctl -d $device --set-ctrl=zoom_absolute=500
 
 if [ "$1" = "night" ]; then
   if [ ! -z $device ]; then

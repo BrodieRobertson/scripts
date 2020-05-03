@@ -1,0 +1,15 @@
+#!/bin/sh
+MinWidth=135
+MinHeight=240
+
+move() {
+  xdo resize -w $MinHeight -h $MinWidth $id
+  xdo move -x $1 -y $2 $id
+}
+
+id=$(cat .cache/cam_indicator)
+
+case "$1" in
+  new) $TERMINAL -e inf;;
+  *) move $1 $2;;
+esac

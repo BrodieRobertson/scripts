@@ -1,0 +1,18 @@
+#!/bin/sh
+Output=
+for file in ~/.cache/crypto/*
+do
+	if [ ! -z "$Output" ]; then
+		if [ ! $(basename $file) = "time" ]; then
+			Output="$Output\n$(cat $file)"
+		fi
+	else
+		if [ ! $(basename $file) = "time" ]; then
+			Output="$Output$(cat $file)"
+		fi
+	fi
+
+done
+
+Output="$Output\n$(cat ~/.cache/crypto/time)"
+notify-send "Crypto Prices" "$Output"

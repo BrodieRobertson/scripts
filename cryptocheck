@@ -1,0 +1,22 @@
+#!/bin/sh
+ShortName="BAT\nLBC"
+
+if [ ! -d ~/.cache/crypto ]; then
+	mkdir ~/.cache/crypto
+fi
+
+echo "$ShortName" | while read coin
+do
+	price=$(curl rate.sx/1$coin)
+	if [ $coin = "BAT" ]; then
+		icon=🦁
+	elif [ $coin = "LBC" ]; then
+		icon=📖
+	fi
+
+	echo "$icon $coin: $price" > ~/.cache/crypto/$coin
+
+done
+
+date > ~/.cache/crypto/time
+

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+Main="$(curl -s https://www.youtube.com/channel/UCld68syR8Wi-GY_n4CaoJGA | grep -i "subscribers" | awk -F\> '{print $19}' | awk -F\< '{print $1}')"
+
+if [ ! -z "$Main" ]; then
+	echo "$Main" > ~/.cache/subs/main
+fi
+
+Podcast="$(curl -s https://www.youtube.com/channel/UCBq5p-xOla8xhnrbhu8AIAg | grep -i "subscribers" | awk -F\> '{print $19}' | awk -F\< '{print $1}')"
+
+if [ ! -z "$Podcast" ]; then
+	echo "$Podcast" > ~/.cache/subs/podcast
+fi

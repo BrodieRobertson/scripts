@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# Get class of a wid
+get_class() {
+	Id=$1
+  if [ -z $Id ]; then
+    echo ""
+  else
+	  xprop -id $Id | sed -n '/WM_CLASS\|WM_COMMAND/s/.*"\(.*\)".*/\1/p'
+  fi
+}
+
+swallow() {
+	AddedToDesktop=$2
+	LastTerminalDesktop=$(bspc query -D -n $desktop)
+	SwallowerId=$1
+	SwallowingId=$(bspc query -N -n prev)
+
+	if [ $AddedToDesktop = $LastTerminalDesktop ]; then
+		grep "^$(get_class $SwallowerId)$" ~/.config/bspwm/noswallow && return
+		grep "^$(get_class $SwallowerId)$" ~/.config/bspwm/terminals && return
+		grep "^$(get_class $SwallowingId)$" ~/.config/bspwm/terminals || return
+		echo $SwallowerId $SwallowingId >> /tmp/swallowids
+		bspc node $SwallowingId --flag hidden=on
+	fi
+}
+
+spit() {
+	SpitterId=$1
+	grep "^$SpitterId" /tmp/swallowids || return
+	SpittingId=$(grep "^$SpitterId" /tmp/swallowids | head -n1 | awk '{print $2}')
+	bspc node $SpittingId --flag hidden=off
+	bspc node $SpittingId -f
+	sed -i "/^$SpitterId/d" /tmp/swallowids
+}
+
+bspc subscribe node_add | while read -r Event Monitor Desktop Ip Node
+do
+	swallow $Node $Desktop
+done &
+
+bspc subscribe node_remove | while read -r Event Monitor Desktop Node
+do
+	spit $Node
+done &

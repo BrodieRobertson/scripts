@@ -7,11 +7,12 @@ extern="$2"
 extramonitor() {
   case "$1" in
       "disconnect") xrandr --output "$extern" --off --output "$intern" --auto ;;
-      "extra") xrandr --output "$extern" --mode 1920x1080 && xrandr --output "$intern" --auto --output "$extern" --right-of "$intern" ;;
+      "4kextra") xrandr --output "$extern" --mode 3840x2160 && xrandr --output "$intern" --auto --output "$extern" --right-of "$intern" ;;
+      "1080pextra") xrandr --output "$extern" --mode 1920x1080 && xrandr --output "$intern" --auto --output "$extern" --right-of "$intern" ;;
       "duplicate") xrandr --output "$extern" --set audio force-dvi --mode 1920x1080 && xrandr --output "$intern" --auto --output "$extern" --same-as "$intern" ;;
       *) notify-send "Multi Monitor" "Unknown Operation" ;;
   esac
 }
 
-selection=$(printf "disconnect\nextra\nduplicate" | dmenu -i -p "Monitor Configuration")
+selection=$(printf "1080pextra\n4kextra\ndisconnect\nduplicate" | dmenu -i -p "Monitor Configuration")
 extramonitor "$selection" && fixdualhead -pd "1 2 3 4 5 6 7" -p "$intern" -s "$extern" -sd "8 9 0"

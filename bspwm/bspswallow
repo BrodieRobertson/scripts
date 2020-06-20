@@ -11,10 +11,10 @@ get_class() {
 }
 
 swallow() {
-	AddedToDesktop=$2
-	LastTerminalDesktop=$(bspc query -D -n $desktop)
 	SwallowerId=$1
 	SwallowingId=$(bspc query -N -n prev)
+	AddedToDesktop=$2
+	LastTerminalDesktop=$(bspc query -D -n $SwallowingId)
 
 	if [ $AddedToDesktop = $LastTerminalDesktop ]; then
 		grep "^$(get_class $SwallowerId)$" ~/.config/bspwm/noswallow && return

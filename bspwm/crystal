@@ -1,0 +1,81 @@
+#!/usr/bin/env sh
+
+# Status Bar
+[ "$STATUS_BAR" ] || export STATUS_BAR=polybar-bar_DisplayPort-0
+
+hidden_windows=/tmp/crystal_0$(wmctrl -d | grep "\*" | cut -d ' ' -f 1)
+hidden_desktops=/tmp/crystal_1$(wmctrl -d | grep "\*" | cut -d ' ' -f 1)
+mode="$hidden_windows"_mode
+
+hide_nodes() {
+  xdo id -rd | tee "$hidden_windows"
+	bspc query -D -d focused | tee "$hidden_desktops"
+	while read p; do
+	  bspc node "$p" -g hidden=on
+	done < "$hidden_windows"
+  bspc node -t fullscreen
+}
+
+unhide_nodes() {
+	while read p; do
+
+		if [ ! "$(grep "$p" /tmp/swallowids | awk '{ print $2 }')" = "$p" ]; then
+			bspc node "$p" -g hidden=off
+		fi
+	done < "$hidden_windows"
+  bspc node -t tiled
+
+  : > "$hidden_windows"
+  : > "$hidden_desktops"
+}
+
+hide_bar() {
+  xdo hide -a $STATUS_BAR
+}
+
+show_bar() {
+  xdo show -a $STATUS_BAR
+}
+
+case $1 in
+	# Used to enter fullscreen mode
+  --fullscreen)
+    if [ -s "$mode" ]; then
+      : > "$mode"
+      unhide_nodes
+			show_bar
+		else
+      echo mono > "$mode"
+      hide_nodes
+			hide_bar
+    fi
+    ;;
+
+	# Used to send a node to another desktop
+	--send)
+		bspc node -d $2
+		show_bar
+		unhide_nodes
+		;;
+
+
+	# Used when focusing on another desktop
+	--focus)
+		bspc desktop -f $2
+		hidden_desktops=/tmp/crystal_1$(wmctrl -d | grep "\*" | cut -d ' ' -f 1)
+		if [ "$(cat $hidden_desktops)" = "" ]; then
+			show_bar
+		else
+			hide_bar
+		fi
+		;;
+
+		# Used when closing a node
+	--close)
+		xdo close
+		unhide_nodes
+		show_bar
+		;;
+  *) : ;;
+
+esac

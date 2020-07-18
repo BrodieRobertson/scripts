@@ -3,8 +3,5 @@
 killall -q lemonbar
 killall -q lemonconfig
 
-while pgrep -u $UID -x lemonbar >/dev/null; do sleep 1; done
-while pgrep -u $UID -x lemonconfig >/dev/null; do sleep 1; done
-
-lemonconfig | lemonbar -p -g 1920x32+0+0 -F#FFFFFFFF -B#FF222222 -U#268bd2 -u 2 -f "JetBrains Mono Medium"-12 -f "Font Awesome"-12 | $SHELL
+lemonconfig | lemonbar -p -g 1920x32+0+0 -F "#FFFFFFFF" -B "#FF222222" -U "#268bd2" -u 3 -o -4 -f "JetBrains Mono Medium"-14 -o -2 -f "Hack Nerd Font"-18 | $SHELL
 

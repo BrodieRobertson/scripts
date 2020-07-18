@@ -1,88 +1,107 @@
 #!/usr/bin/bash
 # Outputs a configuration for lemonbar
+
+trap 'Update' 5
+
+background="#2D2D2D"
+
+Format() {
+	echo "%{+u}%{B$background} $1 %{B}%{-u}"
+}
+
 Workspaces() {
-  desktops=$(bspc query -D --names)
+	desktops=$(bspc query -D --names)
   focused=$(bspc query -D --names -d focused)
 
-  for desktop in $desktops; do
-    nodes=$(bspc query -N -d $desktop)
+	for desktop in $desktops; do
+		desktop=$(echo "$desktop")
+		nodes=$(bspc query -N -d $desktop)
 
-    if [ ! -z "$nodes" ]; then
-      desktops=$(echo $desktops | sed "s/$desktop/%{F#ff0000}$desktop%{F-}/")
+		if [ ! -z "$nodes" ]; then
+			desktops=$(echo $desktops | sed "s/$desktop/%{F#ff0000}$desktop%{F-}/")
     fi
 
   done
-  desktops=$(echo $desktops | sed "s/$focused/%{B#595959} $focused %{B-}/")
+  desktops=$(echo $desktops | sed "s/$focused/%{B$background}%{+u}_$focused\_%{-u}%{B-}/")
 
-  echo -e -n %{+u}$desktops
+  echo $desktops | sed "s/_/ /g"
+}
+
+CpuTemp() {
+	temp=$(sensors | grep "Tdie" | sed "s/Tdie: *+//;s/°C *//")
+	if [ 1 -eq "$(echo "$temp > 80" | bc)" ]; then
+			printf "%%{F#ed0b0b}"
+	elif [ 1 -eq "$(echo "$temp > 60" | bc)" ]; then
+			printf "%%{F#f2e421}";
+	fi
+	Format ""$temp"°C%{F-}"
+}
+
+Cpu() {
+	usage=$(mpstat | sed '1,3d;s/.* //')
+	output="$(calc 100 - $usage)"
+	Format "$output"
 }
 
 Clock(){
 	DATE=$(date "+%d/%m/%y")
 	TIME=$(date "+%I:%M:%S")
 
-	echo -e -n "\uf073 ${DATE} \uf017 ${TIME}"
+	Format "${DATE} ${TIME}"
 }
 
 ActiveWindow(){
-	echo -n "$(xdotool getwindowfocus getwindowname)"
+	printf " $(xdotool getwindowfocus getwindowname)"
 }
 
-Battery() {
-	BATTACPI=$(acpi --battery)
-	BATPERC=$(echo $BATTACPI | cut -d, -f2 | tr -d '[:space:]')
+Packages() {
+	Format "$(sudo pacman -Qu | wc -l)"
+}
 
-	if [[ $BATTACPI == *"100%"* ]]
-	then
-		echo -e -n "\uf00c $BATPERC"
-	elif [[ $BATTACPI == *"Discharging"* ]]
-	then
-		BATPERC=${BATPERC::-1}
-		if [ $BATPERC -le "10" ]
-		then
-			echo -e -n "\uf244"
-		elif [ $BATPERC -le "25" ]
-		then
-			echo -e -n "\uf243"
-		elif [ $BATPERC -le "50" ]
-		then
-			echo -e -n "\uf242"
-		elif [ $BATPERC -le "75" ]
-		then
-			echo -e -n "\uf241"
-		elif [ $BATPERC -le "100" ]
-		then
-			echo -e -n "\uf240"
-		fi
-		echo -e " $BATPERC%"
-	elif [[ $BATTACPI == *"Charging"* && $BATTACPI != *"100%"* ]]
-	then
-		echo -e "\uf0e7 $BATPERC"
-	elif [[ $BATTACPI == *"Unknown"* ]]
-	then
-		echo -e "$BATPERC"
-	fi
+Subs() {
+	#Format "$(polysubs)"
+	Format "7.42k 116"
+}
+
+
+Memory() {
+	echo "%{A:$TERMINAL -e htop:}$(Format "$(i3memory)")%{A}"
 }
 
 Sound(){
-  VOL=$(pulsevolume | awk '{print $2}' | tr -d "%")
-	if [ ! $VOL = "mute" ]; then
-		if [ $VOL -ge 85 ] ; then
-			echo -e "\uf028 ${VOL}%"
-		elif [ $VOL -ge 50 ] ; then
-			echo -e "\uf027 ${VOL}%"
-		else
-			echo -e "\uf026 ${VOL}%"
-		fi
+	device=$(pulsedevices | grep "pci-0000_0b" -A 2)
+	mute=$(echo "$device" | grep "Mute" | awk '{ print $2 }')
+	vol=$(echo "$device" | grep "front-left" | awk '{ print $5 }')
+	output=""
+
+	if [ "$mute" = "yes" ]; then
+	  output="🔇 mute"
+	elif [ "$(echo "$vol" | tr -d "%")" -gt 70 ]; then
+	  output="🔊 $vol"
+	elif [ "$(echo "$vol" | tr -d "%")" -gt 35 ]; then
+	  output="奔 $vol"
 	else
-		echo -e "\uf026 $VOL"
+	  output="🔈 $vol"
 	fi
+
+	Format "$output"
 }
-Term() {
-  echo -e "%{A:st &:}Open Terminal%{A}"
+
+Weather() {
+	Format $(cat ~/.cache/weather)
+}
+
+NewModule() {
+	echo "%{B#aef4e3}%{+u}Hello World%{-u}%{B}"
+}
+
+Update() {
+	echo -e "%{l}$(Workspaces) $(ActiveWindow) %{r} $(Packages) $(Subs) $(Cpu) $(CpuTemp) $(Memory) $(Sound) $(Weather) $(Clock)"
+	#echo -e "%{r} $(NewModule)"
 }
 
 while true; do
-  echo -e "%{l}$(Workspaces) %{c} $(ActiveWindow) %{r} $(Term) $(Battery) $(Sound) $(Clock)"
-	sleep 0.1s
+	Update
+	sleep 5s &
+	wait
 done

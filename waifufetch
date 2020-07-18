@@ -1,3 +1,0 @@
-#!/bin/sh
-neofetch --clean && neofetch --kitty ~/waifu.png
-waifu-get &

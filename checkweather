@@ -1,0 +1,2 @@
+#!/bin/sh
+i3weather > ~/.cache/weather

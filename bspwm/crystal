@@ -68,6 +68,7 @@ case $1 in
 		else
 			hide_bar
 		fi
+		reflemon
 		;;
 
 		# Used when closing a node

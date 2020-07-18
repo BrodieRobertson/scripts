@@ -13,7 +13,3 @@ elif [ "$(echo "$vol" | tr -d "%")" -gt 35 ]; then
 else
   echo "🔈 $vol"
 fi
-
-
-
-

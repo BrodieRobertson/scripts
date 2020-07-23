@@ -1,26 +1,50 @@
 #!/bin/sh
-# Simple script to generate a script file in my scripts directory
 
-printf "File Name: "
+# Create and edit a new script
+# Usage: mkscript
 
-# Set a name for the script
-while [ -z "$ans" ];
+####################
+# helper functions #
+####################
+prompt_dir()
+{
+   printf "There is no scripts folder at %s, create one? " "$SCRIPTS_DIR"
+   while [ -z "$OPTION" ]
+   do
+       printf "[y/N]"
+       read -r OPTION
+   done
+}
+
+create_dir()
+{
+    case "$OPTION" in
+        y|Y|yes|YES) mkdir "$SCRIPTS_DIR"  ;;
+        n|N|no|NO) echo 'Goodbye!' && exit 0 ;;
+        *) echo 'Invalid option' && exit 0 ;;
+    esac
+}
+
+###############
+# main script #
+###############
+SCRIPTS_DIR="$HOME/scripts"
+
+# if SCRIPTS_DIR does not exist, ask the user if they want to
+# create it
+[ ! -d "$SCRIPTS_DIR" ] && prompt_dir
+[ -n "$OPTION" ] && create_dir
+
+# prompt for a filename for the script
+while [ -z "$FILENAME" ]
 do
-  read -r ans
-
-  if [ -z "$ans" ]; then
-    printf "File Name: "
-  fi
+    printf 'File name: '
+    read -r FILENAME
 done
 
-file=$HOME/scripts/$ans
-
-if [ -d "$HOME/scripts" ]; then
-  if [ -e "$HOME/scripts/$ans" ]; then
-    $EDITOR "$file"
-  else
-    echo "#!/bin/sh" >> "$file"
-    chmod +x "$file"
-    $EDITOR "$file"
-  fi
-fi
+# if the file exists, edit it, otherwise create it and edit it
+FILE="$HOME/scripts/$FILENAME"
+{ [ -e "$FILE" ] && $EDITOR "$FILE"; }\
+    || { echo '#!/bin/sh' > "$FILE" \
+         && chmod 755 "$FILE" \
+         && $EDITOR "$FILE";}

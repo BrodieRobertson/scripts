@@ -1,0 +1,6 @@
+#!/bin/sh
+
+DATE=$(date "+%d/%m/%y")
+TIME=$(date "+%I:%M:%S")
+
+echo "${DATE} ${TIME}"

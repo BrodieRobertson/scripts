@@ -13,13 +13,11 @@ v4l2-ctl -d $device --set-ctrl=contrast=128
 v4l2-ctl -d $device --set-ctrl=sharpness=128
 v4l2-ctl -d $device --set-ctrl=white_balance_temperature=4800
 v4l2-ctl -d $device --set-ctrl=zoom_absolute=500
+v4l2-ctl -d $device --set-ctrl=brightness=140
 
-if [ "$1" = "night" ]; then
+
+if [ "$1" = "coloured" ]; then
   if [ ! -z $device ]; then
-    v4l2-ctl -d $device --set-ctrl=brightness=140
-  fi
-else
-  if [ ! -z $device ]; then
-    v4l2-ctl -d $device --set-ctrl=brightness=140
+		v4l2-ctl -d $device --set-ctrl=gain=10
   fi
 fi

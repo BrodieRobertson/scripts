@@ -12,15 +12,9 @@ fi
 device=$(pulsedevices | grep "pci-0000_0b" -A 2)
 vol=$(echo "$device" | grep "front-left" | awk '{ print $5 }' | tr -d "%")
 
-if [ "$1" = "output-vol" ]; then
-	echo "$vol" > /tmp/xobpipe
-else
-	echo "$vol!" > /tmp/xobpipe
-fi
-
-
 # Updates volume in bar
 polybar-msg hook volume 1
+#pkill -SIGTRAP pulseupdate
 #pkill -SIGRTMIN+1 i3blocks
-reflemon
+#reflemon
 

@@ -1,0 +1,230 @@
+#!/usr/bin/env bash
+
+declare -a buffer
+declare -i line base
+declare file version message
+bind 'set disable-completion on' 2>/dev/null
+
+line=0
+base=1
+file="bed.txt"
+version="INDEV"
+message="🛏  Welcome to bed"
+unsaved_changes=0
+
+shopt -s checkwinsize; (:)
+trap refresh WINCH ALRM
+trap cleanup EXIT INT HUP USR1
+
+startup() {
+    cursor hide && cursor spos && cursor save
+}
+
+cleanup() {
+    cursor show && cursor rpos && cursor load
+    exit
+}
+
+cursor() {
+    case "$1" in
+    save) printf "\e[?47h";;
+    load) printf "\e[?47l";;
+    spos) printf "\e7";;
+    rpos) printf "\e8\e[B";;
+    hide) printf "\e[?25l";;
+    show) printf "\e[?25h";;
+    goto) printf "\e[%s;%sf" "$2" "$3";;
+    esac
+    return 1
+}
+
+refresh() {
+    clear
+    printf "\e[100m %s (%s Lines) %s %sx%s %s \e[m\n" \
+        "$file" "${#buffer[@]}" "$version" "$LINES" "$COLUMNS" "$base"
+    for ((i=base; i-base < LINES-3; i++)); do
+        ((i !=  line))        && printf "\e[90m"
+        ((i > ${#buffer[@]})) && printf "   ~\e[m\n" || printf "%4s\e[m %s\n" "$i" "${buffer[i]}"
+    done
+    printf "\e[34m%s\e[m\n" "$message"
+}
+
+file_read() {
+    file_set "$1" || return 1
+    mapfile -t -O 1 buffer <"$file"
+    line=1
+    message="Read ${#buffer[@]} lines from '$file'"
+}
+
+file_set() {
+    [ "$1" ] && file=$1 || return 1
+    message="Set file path to '$file'"
+}
+
+file_write() {
+    : >"$file"
+    for wline in "${buffer[@]}"; do echo "$wline" >>"$file"; done
+    message="Wrote ${buffer[@]} lines to '$file'"   
+    unsaved_changes=0
+}
+
+line_up() {
+    for ((i=0;i<$1;i++)); do
+        ((line > 1))    && ((line--))
+        ((line < base)) && ((base--))
+        ((base <= 0))   && base=1
+    done
+}
+
+line_down() {
+    for ((i=0;i<$1;i++)); do
+        ((line < ${#buffer[@]})) && ((line++))
+        ((line > base+LINES-4))  && ((base++))
+    done
+}
+
+line_delete() {
+    buffer=([0]="" "${buffer[@]:1:line-1}" "${buffer[@]:line+1}")
+    unset "buffer[0]"
+    ((line > ${#buffer[@]})) && ((line--))
+    unsaved_changes=1 #Set unsaved changes to 1
+}
+
+line_insert() {
+    buffer=([0]="" "${buffer[@]:1:line}" "" "${buffer[@]:line+1}")
+    unset "buffer[0]"
+    ((line++))
+    refresh
+    line_edit
+}
+
+line_blank() {
+    buffer=([0]="" "${buffer[@]:1:line}" "" "${buffer[@]:line+1}")
+    unset "buffer[0]"
+}
+
+line_append() {
+    cursor goto $((line-base + 2)) $((${#buffer[line]} + 6)) && cursor show
+    read -re
+    cursor hide
+    buffer[line]+=$REPLY
+    unsaved_changes=1 #Set unsaved changes to 1
+}
+
+line_clear() {
+    ((line == 0)) && return
+    cursor goto $((line-base + 2)) 6
+    buffer[line]=""
+    unsaved_changes=1
+}
+
+line_clear() {
+    ((line == 0)) && return
+    cursor goto $((line-base + 2)) 6
+    buffer[line]=""
+}
+
+line_edit() {
+    ((line == 0)) && return
+    cursor goto $((line-base + 2)) 6 && cursor show
+    read -rei "${buffer[line]}"
+    cursor hide
+    #Update line if changed
+    if [ "${buffer[line]}" != "$REPLY" ]; then
+        buffer[line]=$REPLY
+        unsaved_changes=1 #Set unsaved changes to 1
+    fi
+}
+
+file_prompt () {
+    bind 'set disable-completion off' 2>/dev/null
+    read -rep "> " choice
+    bind 'set disable-completion on'
+    printf "$choice"
+}
+
+quit () {
+    if [ "$unsaved_changes" -ne 0 ]; then
+        message="File $file was modified, save before close? [Y/n/c] "
+        while [ 1 ]; do #Iterate until a valid answer is provided
+            refresh
+            read -n 1
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                file_write
+                refresh
+                exit 0
+            elif [[ $REPLY =~ ^[Nn]$ ]]; then
+                exit 0
+            elif [[ $REPLY =~ ^[Cc]$ ]]; then
+                message="Quit cancelled"
+                break #Break and return
+            else
+                continue #Invalid answer, keep iterating
+            fi
+        done
+    else
+        exit 0
+    fi
+    #Return performing no action
+}
+
+keyboard_loop () {
+    startup
+    file_read "$1" && message="🛏  Welcome to bed ($message)"
+    refresh
+
+    declare -a key
+    while read -rsN1 -t0.02 key[0] || true; do
+        # If a timeout occured, do nothing
+        [ "${key[0]}" ] || continue
+
+        # Nasty hack for multibyte input
+        read -rsN1 -t 0.0001 key[1]
+        read -rsN1 -t 0.0001 key[2]
+        read -rsN1 -t 0.0001 key[3]
+
+        # Compute key presses
+        case "$(printf %s "${key[@]}")" in
+        $'\e[A'|$'\e0A') line_up 1;;
+        $'\e[B'|$'\e0B') line_down 1;;
+        $'\e[5~'|$'\e05~') line_up $((LINES - 4));;
+        $'\e[6~'|$'\e06~') line_down $((LINES - 4));;
+        a) line_append;;
+        b) line_blank;;
+        c) line_clear;;
+        d) line_delete;;
+        e) line_edit;;
+        f) file_set $(file_prompt);;
+        i) line_insert;;
+        l) file_read $(file_prompt);;
+        q) quit;;
+        w) file_write;;
+        esac
+
+        # Refresh the UI
+        refresh
+    done
+}
+
+usage () {
+cat <<EOF
+${0##*/}: bash text editor
+
+usage: ${0##*/} [options] [file]
+
+options:
+    -h|--help: print this help message
+
+open file for editing.
+if file is not given, default to bed.txt.
+EOF
+}
+
+main () {
+    case $1 in
+        -h|--help) trap : EXIT; usage;;
+        *) keyboard_loop "$1";;
+    esac
+}
+
+main "$@"

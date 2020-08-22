@@ -1,0 +1,5 @@
+#!/bin/sh
+usage=$(mpstat 1 1 | sed '1,4d;s/.* //')
+output="$(calc 100 - $usage)"
+
+echo "$output"

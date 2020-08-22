@@ -1,0 +1,10 @@
+#!/bin/sh
+trap 'Update' 5
+
+Update() {
+	echo "update"
+}
+
+while true; do
+	wait
+done

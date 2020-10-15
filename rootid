@@ -1,6 +1,11 @@
 #!/bin/sh
 # Outputs the id of the root window
 
+if ! command -V xwininfo > /dev/null 2>&1; then
+	printf "ERROR: Dependency 'xwininfo' not met.\n" 1>&2
+	exit 1
+fi
+
 Count=0
 xwininfo -root | while read Line; do
 	case $Line in

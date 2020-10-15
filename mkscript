@@ -8,19 +8,17 @@ while [ -z "$ans" ];
 do
   read -r ans
 
-  if [ -z "$ans" ]; then
-    printf "File Name: "
-  fi
+  [ -z "$ans" ] && printf "File Name: "
 done
 
 file=$HOME/scripts/$ans
 
-if [ -d "$HOME/scripts" ]; then
-  if [ -e "$HOME/scripts/$ans" ]; then
-    $EDITOR "$file"
-  else
-    echo "#!/bin/sh" >> "$file"
-    chmod +x "$file"
-    $EDITOR "$file"
-  fi
+[ -d "$HOME/scripts" ] || exit 1
+
+if [ -e "$HOME/scripts/$ans" ]; then
+  $EDITOR "$file"
+else
+  echo "#!/bin/sh" >> "$file"
+  chmod +x "$file"
+  $EDITOR "$file"
 fi

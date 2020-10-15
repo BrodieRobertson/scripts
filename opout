@@ -11,16 +11,22 @@
 #TODO: Ignore initial period to fix failing on hidden files.
 #TODO: If absolute path, ignore all but basename.
 
-if ! command -V setsid > /dev/null 2>&1; then
-	printf "ERROR: Dependency 'setsid' not found.\n"
+Err(){
+	printf 'ERROR: %s\n' "$1" 1>&2
 	exit 1
-fi
+}
 
 CutStop(){
 	IFS=$1; shift
 	set -- $1
 	printf '%s' "$2"
 }
+
+if ! command -V setsid > /dev/null 2>&1; then
+	Err "Dependency 'setsid' not found."
+elif ! [ -f "$*" ]; then
+	Err "Provided file does't exist or isn't a file."
+fi
 
 exec > /dev/null 2>&1
 case $(CutStop . "$*") in

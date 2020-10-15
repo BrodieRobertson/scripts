@@ -1,10 +1,31 @@
 #!/bin/sh
 # opout: "open output": A general handler for opening a file's intended output.
 # I find this useful especially running from vim.
+#
+# Drawbacks:
+#
+#   Restricted to single-file use, and those with an extension. The file's
+#   mimetype is not determined and processed. If two or more periods are found
+#   within the filename, this will fail, so including hidden files.
+#
+#TODO: Ignore initial period to fix failing on hidden files.
+#TODO: If absolute path, ignore all but basename.
 
-basename="$(echo "$1" | sed 's/\.[^\/.]*$//')"
+if ! command -V setsid > /dev/null 2>&1; then
+	printf "ERROR: Dependency 'setsid' not found.\n"
+	exit 1
+fi
 
-case "$1" in
-	*.tex|*.md|*.rmd|*.ms|*.me|*.mom) setsid "$READER" "$basename".pdf >/dev/null 2>&1 & ;;
-	*.html) setsid "$BROWSER" --new-window "$basename".html >/dev/null 2>&1 & ;;
+CutStop(){
+	IFS=$1; shift
+	set -- $1
+	printf '%s' "$2"
+}
+
+exec > /dev/null 2>&1
+case $(CutStop . "$*") in
+	tex|md|rmd|m[es]|mom)
+		setsid "$READER" "$*" & ;;
+	html)
+		setsid "$BROWSER" --new-window "$*" & ;;
 esac

@@ -1,3 +1,16 @@
 #!/bin/sh
 # Outputs the id of the root window
-xwininfo -root | awk '/Window id:/{print $4}'
+
+Count=0
+xwininfo -root | while read Line; do
+	case $Line in
+		*\ Window\ id:\ *)
+			for Field in $Line; do
+				Count=$((Count + 1))
+				if [ $Count -eq 4 ]; then
+					printf '%s\n' "$Field"
+					exit 0
+				fi
+			done ;;
+	esac
+done

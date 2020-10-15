@@ -9,7 +9,7 @@
 #   within the filename, this will fail, so including hidden files.
 #
 #TODO: Ignore initial period to fix failing on hidden files.
-#TODO: If absolute path, ignore all but basename.
+#TODO: If absolute path, ignore periods in all but basename.
 
 Err(){
 	printf 'ERROR: %s\n' "$1" 1>&2

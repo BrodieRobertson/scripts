@@ -1,23 +1,20 @@
 #!/bin/sh
 # Simple script to set my webcam settings
-
+# Key Light 35
+# Hair Light 30
 device=$(v4l2-ctl --list-devices | grep "C920" -A 1 | grep "/dev/video." -o)
 
 v4l2-ctl -d $device --set-ctrl=focus_auto=0
 v4l2-ctl -d $device --set-ctrl=exposure_auto=1
 v4l2-ctl -d $device --set-ctrl=white_balance_temperature_auto=0
-v4l2-ctl -d $device --set-ctrl=focus_absolute=40
-v4l2-ctl -d $device --set-ctrl=exposure_absolute=300
+v4l2-ctl -d $device --set-ctrl=focus_absolute=20
+v4l2-ctl -d $device --set-ctrl=exposure_absolute=200
 v4l2-ctl -d $device --set-ctrl=saturation=128
 v4l2-ctl -d $device --set-ctrl=contrast=128
 v4l2-ctl -d $device --set-ctrl=sharpness=128
-v4l2-ctl -d $device --set-ctrl=white_balance_temperature=4800
-v4l2-ctl -d $device --set-ctrl=zoom_absolute=500
-v4l2-ctl -d $device --set-ctrl=brightness=140
+v4l2-ctl -d $device --set-ctrl=white_balance_temperature=4500
+v4l2-ctl -d $device --set-ctrl=zoom_absolute=200
+v4l2-ctl -d $device --set-ctrl=brightness=120
+v4l2-ctl -d $device --set-ctrl=gain=50
 
 
-if [ "$1" = "coloured" ]; then
-  if [ ! -z $device ]; then
-		v4l2-ctl -d $device --set-ctrl=gain=10
-  fi
-fi

@@ -1,0 +1,75 @@
+#!/bin/sh
+
+Amount=10
+
+HandleClick() {
+    if [ "$ClickType" = "up" ]; then
+        case "$Click" in
+            "1") xdotool mouseup 1 ;;
+            "2") xdotool mouseup 2 ;;
+            "3") xdotool mouseup 3 ;;
+            "4") xdotool mouseup 4 ;;
+            "5") xdotool mouseup 5 ;;
+        esac
+    elif [ "$ClickType" = "down" ]; then
+        case "$Click" in
+            "1") xdotool mousedown 1 ;;
+            "2") xdotool mousedown 2 ;;
+            "3") xdotool mousedown 3 ;;
+            "4") xdotool mousedown 4 ;;
+            "5") xdotool mousedown 5 ;;
+        esac
+    else
+        case "$Click" in
+            "1") xdotool click 1 ;;
+            "2") xdotool click 2 ;;
+            "3") xdotool click 3 ;;
+            "4") xdotool click 4 ;;
+            "5") xdotool click 5 ;;
+        esac
+    fi
+
+}
+
+HandleMove() {
+    case "$Direction" in
+        "left") xdotool mousemove_relative -- -$Amount 0 ;;
+        "right") xdotool mousemove_relative $Amount 0 ;;
+        "up") xdotool mousemove_relative -- 0 -$Amount ;;
+        "down") xdotool mousemove_relative 0 $Amount ;;
+        "up-left") xdotool mousemove_relative -- -$Amount -$Amount ;;
+        "up-right") xdotool mousemove_relative -- $Amount -$Amount ;;
+        "down-left") xdotool mousemove_relative -- -$Amount $Amount;;
+        "down-right") xdotool mousemove_relative $Amount $Amount;;
+    esac
+}
+
+# Loop over arguments to script
+for Value in "$@"
+do
+  # Handle options
+  case "$Value" in
+    # Options requring arguments
+    -a|-m|-c|-u|-d) OptionSet=$Value ;;
+    -h|--help) HelpPage; exit 0;;
+  esac
+
+  # Handle arguments
+  if [ -n "$OptionSet" ]; then
+    case "$OptionSet" in
+      -a) Amount=$Value ;;
+      -m) Direction=$Value ;;
+      -u|-d) ClickType=$Value;;
+      -c) Click=$Value ;;
+      *) Err 1 "Invalid option set" ;;
+  esac
+  fi
+done
+
+if [ -n "$Direction" ]; then
+    HandleMove
+fi
+
+if [ -n "$Click" ]; then
+    HandleClick
+fi

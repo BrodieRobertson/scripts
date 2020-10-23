@@ -1,6 +1,16 @@
 #!/bin/sh
 # Preview script built for use with lf and fzf
-LINES=30
+
+handle() {
+	if [ -f "$1" ];
+	then
+		highlight "$1" -O ansi --force
+	elif [ -d "$1" ];
+	then
+		tree "$1" -La 1
+	fi
+}
+
 case "$1" in
     *.png|*.jpg|*.jpeg|*.mkv|*.mp4|*.m4v) mediainfo "$1";;
     *.md) glow -s dark "$1";;
@@ -13,5 +23,6 @@ case "$1" in
     *.7z) 7z l "$1";;
     #*.html|*.xml) w3m -dump "$1";;
     *.zsh*|*.bash*|*.git*) pistol "$1";;
-    *) highlight "$1" -O ansi --force;;
+    *) handle "$1" ;;
 esac
+

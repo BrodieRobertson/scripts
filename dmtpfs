@@ -1,5 +1,5 @@
 #!/bin/sh
-Dir=$HOME/cell/
+Dir=$XDG_DATA_HOME/cell/
 
 # Make the cell directory if it doesn't exist
 if [ ! -d "$Dir" ]; then

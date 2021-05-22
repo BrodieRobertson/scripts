@@ -1,0 +1,4 @@
+#!/bin/bash
+selected="$(ls -a | smenu -c -W $'\n' -n20 -x cur 10 -m "Select a file:" -N -q -1 '^\.')"
+echo "$selected"
+

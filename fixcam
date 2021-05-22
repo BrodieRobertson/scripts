@@ -13,7 +13,7 @@ v4l2-ctl -d $device --set-ctrl=saturation=128
 v4l2-ctl -d $device --set-ctrl=contrast=128
 v4l2-ctl -d $device --set-ctrl=sharpness=128
 v4l2-ctl -d $device --set-ctrl=white_balance_temperature=4500
-v4l2-ctl -d $device --set-ctrl=zoom_absolute=200
+v4l2-ctl -d $device --set-ctrl=zoom_absolute=0
 v4l2-ctl -d $device --set-ctrl=brightness=120
 v4l2-ctl -d $device --set-ctrl=gain=50
 

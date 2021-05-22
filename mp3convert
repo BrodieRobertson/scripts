@@ -1,0 +1,6 @@
+#!/bin/sh
+for i in "$1"/*
+do
+  ffmpeg -i "$i" -f mp3 "$2/$(basename "$i").mp3" && rm "$i"
+  rm "$i"
+done

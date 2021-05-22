@@ -1,0 +1,25 @@
+#!/bin/sh
+mpc clear
+mpc volume 30
+mpc random on
+mpc repeat on
+
+case $1 in
+  "outro")
+    mpc load Outro
+    ;;
+  "intro")
+    mpc load Intro
+    ;;
+  "stream")
+    mpc load Stream
+    ;;
+  "serious")
+    mpc load SeriousTime
+    ;;
+  "pause")
+    mpc load Pause
+    ;;
+esac
+
+mpc play

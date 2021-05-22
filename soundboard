@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+from pynput import keyboard
+from pynput.keyboard import Key, Controller
+from pydub import AudioSegment
+from pydub.playback import play
+import json
+from os.path import expanduser
+
+keyboard_controller = Controller()
+config_path = expanduser("~") + "/.config/soundboard.json"
+bindings = {}
+
+special_keys = {'f1': Key.f1,
+        'f2': Key.f2,
+        'f3': Key.f3,
+        'f4': Key.f4,
+        'f5': Key.f5,
+        'f6': Key.f6,
+        'f7': Key.f7,
+        'f8': Key.f8,
+        'f9': Key.f9,
+        'f10': Key.f10,
+        'f11': Key.f11,
+        'f12': Key.f12}
+
+with open(config_path) as config:
+    data = json.load(config)
+    for key in data['bindings']:
+        if key['key'] in special_keys:
+            bindings[special_keys[key['key']]] = key['sound']
+        else:
+            bindings[key['key']] = key['sound']
+
+def play_song(song):
+    # Debug Code
+    # ten_seconds = 3 * 1000
+    # first_10_seconds = song[:ten_seconds]
+    # play(first_10_seconds)
+    play(song)
+
+def on_press(key):
+    try:
+        if key.char in bindings:
+            song = AudioSegment.from_file(bindings[key.char])
+            play_song(song)
+    except AttributeError:
+        if key in bindings:
+            song = AudioSegment.from_file(bindings[key])
+            play_song(song)
+
+# Collect events until released
+with keyboard.Listener(
+        on_press=on_press) as listener:
+    listener.join()

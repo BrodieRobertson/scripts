@@ -1,0 +1,6 @@
+#!/bin/sh
+# Stays on loop while the script is active
+while "true"; do
+  mpc current > /home/brodie/videos/streaming/sound.txt
+	mpc idle
+done

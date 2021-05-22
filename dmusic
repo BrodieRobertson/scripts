@@ -1,0 +1,3 @@
+#!/bin/sh
+selection="$(cat ~/.config/streammusic/config | dmenu -i -p "Play Music")"
+streammusic "$selection"

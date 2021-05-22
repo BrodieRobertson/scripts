@@ -1,0 +1,5 @@
+#!/bin/sh
+
+selection=$(printf "video\nstream" | dmenu -i -p "Video Layout")
+videospace $selection
+

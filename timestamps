@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+import xml.etree.ElementTree as ET
+import json
+import time
+import sys
+
+guides = "kdenlive:docproperties.guides"
+framerate = 30
+
+def find_mainbin(root):
+    for child in root:
+        if "id" in child.attrib and child.attrib["id"] == "main_bin":
+            return child
+
+def find_guides(root):
+    for child in root:
+        if "name" in child.attrib and child.attrib["name"] == guides:
+            return child.text
+
+def parse_guides(guides):
+    for guide in guides:
+        print(time.strftime('%-M:%S', time.gmtime(guide["pos"]/framerate)), guide["comment"])
+
+if len(sys.argv) == 2:
+    tree = ET.parse(sys.argv[1])
+    main_bin = find_mainbin(tree.getroot())
+    guides = json.loads(find_guides(main_bin))
+    parse_guides(guides)
+else:
+    print("No File")

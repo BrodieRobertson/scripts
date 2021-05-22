@@ -1,0 +1,24 @@
+#!/bin/sh
+
+awesome-client 'awful=require("awful");
+  awful.screen.focus(2)
+  awful.screen.focused().tags[1]:view_only()
+  awful.screen.focused().selected_tag.master_count = 2'
+
+  case "$1" in
+    "stream")
+      brave &
+      obs &
+      $TERMINAL -e pulsemixer &
+      $TERMINAL -e ncmpcpp &
+      $TERMINAL --class="VimWiki,VimWiki" -e nvim $XDG_DATA_HOME/vimwiki/index.wiki &
+      streamtime &
+      songname &
+      ;;
+    "video")
+      pcmanfm &
+      obs &
+      $TERMINAL -e pulsemixer &
+      $TERMINAL --class="VimWiki,VimWiki" -e nvim $XDG_DATA_HOME/vimwiki/index.wiki &
+      ;;
+esac

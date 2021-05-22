@@ -1,0 +1,6 @@
+#!/bin/sh
+while true
+do
+  sleep 1
+  date "+%H:%M:%S" > ~/.cache/stream/time
+done

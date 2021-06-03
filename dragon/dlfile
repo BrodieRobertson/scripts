@@ -1,22 +1,19 @@
-#!/bin/sh
+#!/bin/bash
 # Provides the ability to download a file by dropping it into a window
 
 url=$(dragon-drag-and-drop -t -x)
 
 if [ -n "$url" ]; then
-  printf "File Name: "
   name=""
   while [ -z $name ] || [ -e $name ]
   do
-    read -r name
+    read -p "File Name: " -e -i $(basename $url) name
     if [ -e "$name" ]; then
       printf "File already exists, overwrite (y|n): "
       read -r ans
 
       if [ "$ans" = "y" ]; then
         break
-      else
-        printf "File Name: "
       fi
     fi
   done

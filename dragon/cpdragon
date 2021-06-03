@@ -3,7 +3,8 @@ files=$(dragon-drag-and-drop -t -x)
 
 for file in $files
 do
-  path=${file#file://}
+  path=$(echo ${file#file://} |
+    awk -niord '{printf RT?$0chr("0x"substr(RT,2)):$0}' RS=%..)
   name=$(basename "$path")
   cp "$path" "$(pwd)/$name"
 done

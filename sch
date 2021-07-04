@@ -3,6 +3,10 @@
 # To avoid issues with spaces and special characters html encoding is applied to the query
 
 url=$(sort ~/.config/search/search | sed 's/:.*//' | dmenu -i -p "Search Engine" | xargs -I % grep "%:" ~/.config/search/search | sed 's/.*://')
+
+# exit if no url was selected
+[ -z $url ] && exit 0
+
 search=$(sort ~/.config/search/search_history | dmenu -i -p "Search")
 
 # Echo to history file

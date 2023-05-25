@@ -6,7 +6,7 @@ trap 'Update' 5
 background="#2D2D2D"
 
 Format() {
-	echo "%{+u}%{B$background} $1 %{B}%{-u}"
+	echo "%{+u}%{B$background} $1 %{-u}"
 }
 
 Workspaces() {
